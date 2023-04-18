@@ -9,10 +9,10 @@
   --fs-100: 0.25rem; /* small */
   --fs-200: 0.5rem;
   --fs-300: 0.75rem;
-  --fs-400: 1rem; /* normal */
-  --fs-500: 1.25rem;
-  --fs-600: 1.5rem;
-  --fs-700: 2rem; /* large */
-  --fs-800: 3rem;
-  --fs-900: 5rem; /* x-large */
+  --fs-400: 1rem; /* p */
+  --fs-500: 1.25rem; /* h5 */
+  --fs-600: 1.5rem; /* h4 */
+  --fs-700: 2rem; /* h3 */
+  --fs-800: 3rem; /* h2 */
+  --fs-900: 5rem; /* h1 */
 }

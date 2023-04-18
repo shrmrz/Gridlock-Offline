@@ -1,3 +1,81 @@
 <!DOCTYPE html>
-<head> </head>
-<body></body>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <title>Gridlock Traffic Simulator</title>
+    <link rel="stylesheet" href="/Css/variables.css" type="text/css" />
+    <link rel="stylesheet" href="/Css/main.css" type="text/css" />
+    <link rel="stylesheet" href="/Css/home.css" type="text/css" />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="/Assets/Logo/gridlock-logo-with-bg-black.png"
+    />
+  </head>
+
+  <body class="flex column">
+    <header class="flex">
+      <nav class="mainMenu">
+        <input type="checkbox" />
+
+        <div class="bar bar1"></div>
+        <div class="bar bar2"></div>
+        <div class="bar bar3"></div>
+
+        <ul class="mainMenuOptions">
+          <li><a href="">Home</a></li>
+          <li><a href="">About</a></li>
+          <li><a href="">Github</a></li>
+          <li><a href="">Licensing</a></li>
+          <li><a href="">User Manual</a></li>
+          <li><a href="">Developer Manual</a></li>
+        </ul>
+      </nav>
+
+      <img
+        id="logoBanner"
+        src="/Assets/Logo/LogoBanner.svg"
+        alt="Gridlock Logo"
+      />
+    </header>
+
+    <section class="flex column">
+      <div>
+        <h2>Select a Map</h2>
+        <hr />
+      </div>
+
+      <button id="customMapBtn"></button>
+
+      <div id="mapContainer flex">
+        <div id="goLeftBtn" class="arrowIcon"></div>
+        <div id="goRightBtn" class="arrowIcon"></div>
+
+        <ul class="mapList">
+          <!-----  DUMMY DATA  ------>
+          <li class="map flex column">
+            <h3>On Ramp</h3>
+            <img src="/Assets/Imgs/Png/onRamp.PNG" alt="On Ramp Preview" />
+          </li>
+          <li class="map flex column">
+            <h3>On Ramp</h3>
+            <img src="/Assets/Imgs/Png/onRamp.PNG" alt="On Ramp Preview" />
+          </li>
+          <li class="map flex column">
+            <h3>On Ramp</h3>
+            <img src="/Assets/Imgs/Png/onRamp.PNG" alt="On Ramp Preview" />
+          </li>
+          <li class="map flex column">
+            <h3>On Ramp</h3>
+            <img src="/Assets/Imgs/Png/onRamp.PNG" alt="On Ramp Preview" />
+          </li>
+          <li class="map flex column">
+            <h3>On Ramp</h3>
+            <img src="/Assets/Imgs/Png/onRamp.PNG" alt="On Ramp Preview" />
+          </li>
+          <!--  END OF DUMMY DATA  -->
+        </ul>
+      </div>
+    </section>
+  </body>
+</html>

@@ -1,6 +1,18 @@
 :root {
+  /* Colors used universally throughout the project*/
   --color-primary: #253967;
   --color-secondary: #00408b;
   --color-black: black;
   --color-white: white;
+
+  /* Font sizes used universally throughout the project*/
+  --fs-100: 0.25rem; /* small */
+  --fs-200: 0.5rem;
+  --fs-300: 0.75rem;
+  --fs-400: 1rem; /* normal */
+  --fs-500: 1.25rem;
+  --fs-600: 1.5rem;
+  --fs-700: 2rem; /* large */
+  --fs-800: 3rem;
+  --fs-900: 5rem; /* x-large */
 }

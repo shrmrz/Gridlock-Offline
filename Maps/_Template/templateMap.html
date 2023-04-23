@@ -1,3 +1,390 @@
 <!DOCTYPE html>
-<head> </head>
-<body></body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Gridlock: Onramp</title>
+
+    <link rel="stylesheet" href="/Css/variables.css" type="text/css" />
+    <link rel="stylesheet" href="/Css/main.css" type="text/css" />
+    <link rel="stylesheet" href="/Css/__map_name___.css" type="text/css" />
+
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="/Assets/Logo/gridlock-logo-with-bg-black.png"
+    />
+
+    <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+  </head>
+
+  <body>
+    <!--<<##############################################
+        <<           start of outer container
+        <<##############################################>>-->
+    <div id="container">
+      <!--<<##############################################
+    <<                   Buttons
+    <<##############################################>>-->
+
+      <div id="startStopDiv">
+        <img
+          id="startStop"
+          width="100%"
+          src="figs/buttonStop3_small.png"
+          onclick="myStartStopFunction()"
+        />
+      </div>
+
+      <div id="restartDiv">
+        <img
+          id="restart"
+          width="100%"
+          src="figs/buttonRestart_small.png"
+          onclick="myRestartFunction()"
+        />
+      </div>
+
+      <div id="infoDiv">
+        <img width="100%" src="figs/infoBlue.png" onclick="showInfo()" />
+      </div>
+
+      <div id="lanePlusDiv">
+        <img width="100%" src="figs/autobahn_plus.png" onclick="addOneLane()" />
+      </div>
+
+      <div id="laneMinusDiv">
+        <img
+          width="100%"
+          src="figs/autobahn_minus.png"
+          onclick="subtractOneLane()"
+        />
+      </div>
+
+      <!--<<###################################################### 
+    -   redirects to other scenarios, defines myRedirectX
+    -######################################################>>-->
+
+      <script src="/Js/Utils/redirect.js" type="text/javascript"></script>
+
+      <div id="scenarios">
+        <center>
+          <br />
+          <img
+            width="17%"
+            src="figs/iconRing_small.jpg"
+            onclick="myRedirectRing()"
+          />
+          <img
+            width="19%"
+            src="figs/iconOnrampFig_small.jpg"
+            onclick="myRedirectOnramp()"
+          />
+          <img
+            width="19%"
+            src="figs/iconOfframpFig_small.jpg"
+            onclick="myRedirectOfframp()"
+          />
+          <img
+            width="19%"
+            src="figs/iconRoadworksFig_small.jpg"
+            onclick="myRedirectRoadworks()"
+          />
+          <img
+            width="19%"
+            src="figs/iconUphillFig_small.jpg"
+            onclick="myRedirectUphill()"
+          />
+          <img
+            width="20%"
+            src="figs/iconRoutingFig_small.jpg"
+            onclick="myRedirectRouting()"
+          />
+          <img
+            width="22%"
+            src="figs/iconRoundabout_small.jpg"
+            onclick="myRedirectRoundabout()"
+          />
+          <img
+            width="19%"
+            src="figs/iconIntersection_small.jpg"
+            onclick="myRedirectIntersection()"
+          />
+          <img
+            width="20%"
+            src="figs/iconRampmeterFig_small.jpg"
+            onclick="myRedirectOnrampBaWue()"
+          />
+        </center>
+      </div>
+
+      <!--<<##############################################
+    -          the actual simulation canvas
+    -##############################################>>-->
+
+      <div id="contents">
+        <canvas
+          id="canvas"
+          onmouseenter="handleMouseEnter(event)"
+          onmousemove="handleMouseMove(event)"
+          onmousedown="handleMouseDown(event)"
+          onmouseup="handleMouseUp(event)"
+          onclick="handleClick(event)"
+          onmouseout="cancelActivities(event)"
+          style="border: 1px solid #d3d3d3"
+        >
+          Your browser does not support the HTML5 canvas tag.
+        </canvas>
+      </div>
+
+      <!--<<#################################################
+    -                     Sliders
+    -#################################################>>-->
+
+      <div id="sliders">
+        <center>
+          <!--<<########################################################>>-->
+          <h3>Traffic Flow and General</h3>
+          <!--<<########################################################>>-->
+
+          <table id="mainTable" border="0" cellspacing="1" cellpadding="0">
+            <tr>
+              <td class="important">Offramp Use</td>
+              <td>
+                <input
+                  id="slider_fracOff"
+                  type="range"
+                  min="0"
+                  max="50"
+                  step="1"
+                />
+              </td>
+              <td><div id="slider_fracOffVal"></div></td>
+            </tr>
+
+            <tr>
+              <td>Inflow</td>
+              <td>
+                <input
+                  id="slider_qIn"
+                  type="range"
+                  min="0"
+                  max="5400"
+                  step="10"
+                />
+              </td>
+              <td><div id="slider_qInVal"></div></td>
+            </tr>
+
+            <tr>
+              <td>Truck Perc</td>
+              <td>
+                <input
+                  id="slider_fracTruck"
+                  type="range"
+                  min="0"
+                  max="50"
+                  step="1"
+                />
+              </td>
+              <td><div id="slider_fracTruckVal"></div></td>
+            </tr>
+
+            <tr>
+              <td>Timelapse</td>
+              <td>
+                <input
+                  id="slider_timewarp"
+                  type="range"
+                  min="0.2"
+                  max="20"
+                  step="0.1"
+                />
+              </td>
+              <td><div id="slider_timewarpVal"></div></td>
+            </tr>
+          </table>
+
+          <!--<<########################################################>>-->
+          <h3>Car-Following Behavior</h3>
+          <!--<<########################################################>>-->
+
+          <table id="mainTable" border="0" cellspacing="1" cellpadding="0">
+            <tr>
+              <td>Max Speed v<sub>0</sub></td>
+              <td>
+                <input
+                  id="slider_IDM_v0"
+                  type="range"
+                  min="20"
+                  max="160"
+                  step="1"
+                />
+              </td>
+              <td><div id="slider_IDM_v0Val"></div></td>
+            </tr>
+
+            <tr>
+              <td>Time Gap T</td>
+              <td>
+                <input
+                  id="slider_IDM_T"
+                  type="range"
+                  min="0.6"
+                  max="3"
+                  step="0.1"
+                />
+              </td>
+              <td><div id="slider_IDM_TVal"></div></td>
+            </tr>
+
+            <tr>
+              <td class="important">Max Accel a</td>
+              <td>
+                <input
+                  id="slider_IDM_a"
+                  type="range"
+                  min="0.3"
+                  max="4"
+                  step="0.1"
+                />
+              </td>
+              <td><div id="slider_IDM_aVal"></div></td>
+            </tr>
+          </table>
+
+          <!--<<########################################################>>-->
+          <h3>Lane-Changing Behavior</h3>
+          <!--<<########################################################>>-->
+
+          <table id="mainTable" border="0" cellspacing="1" cellpadding="0">
+            <tr>
+              <td>Politeness</td>
+              <td>
+                <input
+                  id="slider_MOBIL_p"
+                  type="range"
+                  min="-0.2"
+                  max="1"
+                  step="0.1"
+                />
+              </td>
+              <td><div id="slider_MOBIL_pVal"></div></td>
+            </tr>
+
+            <tr>
+              <td>LC Threshold</td>
+              <td>
+                <input
+                  id="slider_MOBIL_bThr"
+                  type="range"
+                  min="-0.1"
+                  max="1"
+                  step="0.1"
+                />
+              </td>
+              <td><div id="slider_MOBIL_bThrVal"></div></td>
+            </tr>
+
+            <tr>
+              <td>Right Bias Cars</td>
+              <td>
+                <input
+                  id="slider_MOBIL_bBiasRight_car"
+                  type="range"
+                  min="-1"
+                  max="2"
+                  step="0.1"
+                />
+              </td>
+              <td><div id="slider_MOBIL_bBiasRight_carVal"></div></td>
+            </tr>
+
+            <tr>
+              <td>Right Bias Trucks</td>
+              <td>
+                <input
+                  id="slider_MOBIL_bBiasRight_truck"
+                  type="range"
+                  min="-1"
+                  max="2"
+                  step="0.1"
+                />
+              </td>
+              <td><div id="slider_MOBIL_bBiasRight_truckVal"></div></td>
+            </tr>
+          </table>
+
+          <!--<<##############################################>>-->
+          <!-- info-text inside sliders-div (filled by showInfo())##############################################>>-->
+
+          <br />
+          <div id="infotext"></div>
+        </center>
+      </div>
+      <!-- id="sliders">-->
+
+      <!--<<############################################## 
+    -                 Download
+    -##############################################>>-->
+
+      <div id="downloadDiv">
+        <img
+          id="download"
+          src="figs/iconDownloadStart_small.png"
+          width="100%"
+          onclick="downloadCallback()"
+        />
+      </div>
+
+      <!--<<############################################## 
+    -         Color Speed Correlation Chart 
+    -##############################################>>-->
+      <div id="colorBox">
+        <center>
+          <img src="figs/colormap_grass.png" width="100%" />
+        </center>
+      </div>
+    </div>
+    <!--<<##############################################
+        -         end of outer container
+    -##############################################>>-->
+
+    <!--<<##############################################
+        -         map non-specific scripts; 
+        -         position after def of canvas / after any simulation elements!
+    -##############################################>>-->
+
+    <!-- random w seed debug -->
+    <script src="/Js/Utils/seedrandom.min.js"></script>
+
+    <script src="/Js/Utils/timeView.js" type="text/javascript"></script>
+    <script src="/Js/Utils/media.js" type="text/javascript"></script>
+
+    <script src="/Js/Utils/control_gui.js"></script>
+    <script src="/Js/Utils/canvas_gui.js"></script>
+    <script src="/Js/Utils/TrafficObjects.js"></script>
+    <script src="/Js/Utils/TrafficLightControlEditor.js"></script>
+
+    <script src="/Js/Utils/colormanip.js"></script>
+
+    <script src="/Js/Utils/models.js"></script>
+    <script src="/Js/Utils/vehicle.js"></script>
+
+    <script src="/Js/Utils/paths.js"></script>
+    <script src="/Js/Utils/road.js"></script>
+    <script src="/Js/Utils/stationaryDetector.js"></script>
+
+    <!--<<##############################################
+        -         map specific scripts; 
+        -           a.k.a. project file
+        -##############################################>>-->
+    <!-- can be removed -->
+    <script src="/Js/Utils/debug.js"></script>
+
+    <script src="./templateMap.js"></script>
+    <!-- edit this  ^^^^^^^^^^^^  -->
+  </body>
+</html>

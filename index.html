@@ -11,6 +11,8 @@
       type="image/png"
       href="/Assets/Logo/gridlock-logo-with-bg-black.png"
     />
+    <script src="/Js/redirect.js" defer></script>
+    <script src="/Js/home.js" defer></script>
   </head>
 
   <body class="flex column">
@@ -31,50 +33,79 @@
           <li><a href="">Developer Manual</a></li>
         </ul>
       </nav>
-
       <img
         id="logoBanner"
         src="/Assets/Logo/LogoBanner.svg"
         alt="Gridlock Logo"
       />
+      <img
+        id="bannerLogo"
+        src="/Assets/Logo/BannerLogo.svg"
+        alt="Gridlock Logo Text"
+      />
     </header>
 
     <section class="flex column">
-      <div>
+      <div class="selectionTitle flex column">
         <h2>Select a Map</h2>
         <hr />
       </div>
 
-      <button id="customMapBtn"></button>
+      <button id="customMapBtn" onclick="redirectToCustomMap()">
+        Custom Map
+      </button>
 
-      <div id="mapContainer flex">
-        <div id="goLeftBtn" class="arrowIcon"></div>
-        <div id="goRightBtn" class="arrowIcon"></div>
-
-        <ul class="mapList">
+      <div class="mapContainer">
+        <div id="goLeftBtn" class="arrowIcon">
+          <img src="/Assets/Imgs/Svg/arrowLeft.svg" alt="Left Arrow" />
+        </div>
+        <ul class="mapList flex">
           <!-----  DUMMY DATA  ------>
-          <li class="map flex column">
+          <li class="map flex column" onclick="redirectToOnRamp()">
             <h3>On Ramp</h3>
-            <img src="/Assets/Imgs/Png/onRamp.PNG" alt="On Ramp Preview" />
+            <img
+              draggable="false"
+              src="/Assets/Imgs/Png/onRamp.PNG"
+              alt="On Ramp Preview"
+            />
           </li>
-          <li class="map flex column">
+          <li class="map flex column" onclick="redirectToOnRamp()">
             <h3>On Ramp</h3>
-            <img src="/Assets/Imgs/Png/onRamp.PNG" alt="On Ramp Preview" />
+            <img
+              draggable="false"
+              src="/Assets/Imgs/Png/onRamp.PNG"
+              alt="On Ramp Preview"
+            />
           </li>
-          <li class="map flex column">
+          <li class="map flex column" onclick="redirectToOnRamp()">
             <h3>On Ramp</h3>
-            <img src="/Assets/Imgs/Png/onRamp.PNG" alt="On Ramp Preview" />
+            <img
+              draggable="false"
+              src="/Assets/Imgs/Png/onRamp.PNG"
+              alt="On Ramp Preview"
+            />
           </li>
-          <li class="map flex column">
+          <li class="map flex column" onclick="redirectToOnRamp()">
             <h3>On Ramp</h3>
-            <img src="/Assets/Imgs/Png/onRamp.PNG" alt="On Ramp Preview" />
+            <img
+              draggable="false"
+              src="/Assets/Imgs/Png/onRamp.PNG"
+              alt="On Ramp Preview"
+            />
           </li>
-          <li class="map flex column">
+          <li class="map flex column" onclick="redirectToOnRamp()">
             <h3>On Ramp</h3>
-            <img src="/Assets/Imgs/Png/onRamp.PNG" alt="On Ramp Preview" />
+            <img
+              draggable="false"
+              src="/Assets/Imgs/Png/onRamp.PNG"
+              alt="On Ramp Preview"
+            />
           </li>
           <!--  END OF DUMMY DATA  -->
         </ul>
+        <div id="goRightBtn" class="arrowIcon">
+          <img src="/Assets/Imgs/Svg/arrowRight.svg" alt="Right Arrow" />
+        </div>
       </div>
     </section>
   </body>

@@ -373,15 +373,19 @@ background.src = debug
 
 // init vehicle image(s)
 carImg = new Image();
-carImg.src = "/Assets/Imgs/Backgrounds/Grass/blackCarCropped.gif";
+carImg.src = "/Assets/Imgs/Traffic_Objects/Vehicles/Cars/car1.gif";
+
 truckImg = new Image();
-truckImg.src = "/Assets/Imgs/Png/truck1Small.png";
+truckImg.src = "/Assets/Imgs/Traffic_Objects/Vehicles/Trucks/truck1.png";
 
 // init traffic light images
 traffLightRedImg = new Image();
-traffLightRedImg.src = "/Assets/Imgs/Png/trafficLightRed_affine.png";
+traffLightRedImg.src =
+  "/Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Red.png";
+
 traffLightGreenImg = new Image();
-traffLightGreenImg.src = "/Assets/Imgs/Png/trafficLightGreen_affine.png";
+traffLightGreenImg.src =
+  "/Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Green.png";
 
 /**
  * @description define obstacle image names
@@ -396,13 +400,13 @@ for (var i = 0; i < 10; i++) {
   //assign the rest as /Assets/Imgs/Png/constructionVeh{1-9}.png images
   obstacleImgs[i].src =
     i == 0
-      ? "/Assets/Imgs/Png/Obstacles/obstacleImg.png"
-      : "/Assets/Imgs/Png/Obstacles/constructionVeh" + i + ".png";
+      ? "/Assets/Imgs/Traffic_Objects/Obstacles/obstacleImg.png"
+      : "/Assets/Imgs/Traffic_Objects/Obstacles/obstacle" + i + ".png";
   //set obstacleImgNames equal to source info
   obstacleImgNames[i] = obstacleImgs[i].src;
 }
-// init road images
 
+// init road images
 roadImgs1 = []; // road with lane separating line
 roadImgs2 = []; // road without lane separating line
 

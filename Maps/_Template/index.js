@@ -50,10 +50,29 @@ drawVehIDs = false;
  */
 drawRoadIDs = true;
 
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
 /***************************************************************
  * *************************************************************
  *
  * general debug settings
+ * @done
  *
  * *************************************************************
  *************************************************************/
@@ -75,6 +94,7 @@ if (debug) {
  *
  * Define Canvas
  * Connect with html elements
+ * @done
  *
  * *************************************************************
  *************************************************************/
@@ -109,6 +129,7 @@ var aspectRatio = canvas.width / canvas.height;
  **************************************************************
  *
  * Add touch listeners
+ * @done
  *
  **************************************************************
  **************************************************************/
@@ -154,10 +175,6 @@ var driver_varcoeff = 0.15;
 // v0 and a coeff of variation (of "agility")
 // need later override road setting by
 // calling road.setDriverVariation(.);
-
-qIn = 4600 / 3600;
-commaDigits = 0;
-setSlider(slider_qIn, slider_qInVal, 3600 * qIn, commaDigits, "veh/h");
 
 density = 0.015; // IC
 
@@ -235,7 +252,7 @@ var scale = refSizePix / refSizePhys;
 
 var laneWidth = 7; // remains constant => road becomes more compact for smaller
 // var laneWidthRamp=5; // main lanewidth used
-var nLanes_main = 3;
+var nLanes_main = 1; // zero based i.e. 0=1
 var nLanes_rmp = 1;
 
 var car_length = 7; // car length in m
@@ -292,31 +309,11 @@ var mainRampOffset = mainroadLen - straightLen;
 var taperLen = 0.2 * offLen;
 var offRadius = 3 * arcRadius;
 
-function updateDimensions() {
-  // if viewport or sizePhys changed
-  void (debug && console.log("in updateDimensions"));
-
-  // if viewport or sizePhys changed (mobile)
-  center_xPhys = center_xRel * refSizePhys; //[m]
-  center_yPhys = center_yRel * refSizePhys;
-
-  void (
-    debug &&
-    console.log(" mainroadLen=", mainroadLen) &&
-    console.log(
-      "updateDimensions: mainroadLen=",
-      mainroadLen,
-      " isSmartphone=",
-      isSmartphone
-    )
-  );
-}
-
 /***************************************************************
  **************************************************************
  *
- * User Configuration Sliders in Menu
- * configure pre-set values for html slider input elements
+ * @Title Menu_Sliders
+ * @description Used for respoonding to User Configurations. Defines pre-set values for html slider (input) elements
  *
  **************************************************************
  **************************************************************/
@@ -327,58 +324,87 @@ function updateDimensions() {
  * and define variables w/o sliders in this scenario
  *************************************************************/
 
+/**********************************************************
+ * @name Offramp_Flow_Slider
+ * @description
+ */
+
 /**
- * Offramp Flow
+ * @initial 25%
  */
 fracOff = 0.25;
+
 setSlider(slider_fracOff, slider_fracOffVal, 100 * fracOff /* 25% */, 0, "%");
 
-/**
- * Inflow
+/**********************************************************
+ * @name Inflow_Slider
+ * @description
  */
-qIn = 4000 / 3600;
-setSlider(slider_qIn, slider_qInVal, 3600 * qIn, 0, "veh/h");
 
 /**
- * Truck Perc
+ * @initial 4000 / 3600 = 1.11
+ */
+qIn = 4600 / 3600;
+commaDigits = 0;
+
+setSlider(slider_qIn, slider_qInVal, 3600 * qIn, commaDigits, "veh/h");
+
+/**********************************************************
+ * @name Truck_Perc_Slider
+ * @description
+ */
+
+/**
+ * @initial 15%
  */
 fracTruck = 0.15;
-setSlider(
-  slider_fracTruck,
-  slider_fracTruckVal,
-  100 * fracTruck /* 15% */,
-  0,
-  "%"
-);
+
+setSlider(slider_fracTruck, slider_fracTruckVal, 100 * fracTruck, 0, "%");
+
+/**********************************************************
+ * @name Max_Accel_A_Slider
+ * @description
+ */
 
 /**
- * Max Accel A
+ * @initial 70%
  */
 IDM_a = 0.7; // low to allow stopGo
+
 setSlider(slider_IDM_a, slider_IDM_aVal, IDM_a, 1, "m/s<sup>2</sup>");
 
 /***************************************************************
  * *************************************************************
  *
  * Image Insertion
+ * @done
  *
  * *************************************************************
  **************************************************************/
 
-// init background image
+/**
+ * @description define background image
+ * @dependency /Assets/Imgs/Backgrounds/Grass/backgroundGrass.jpg, /Assets/Imgs/Backgrounds/Grass/backgroundGrassTest.jpg
+ */
 var background = new Image();
 background.src = debug
   ? "/Assets/Imgs/Backgrounds/Grass/backgroundGrassTest.jpg"
   : "/Assets/Imgs/Backgrounds/Grass/backgroundGrass.jpg";
 
-// init vehicle image(s)
+/**
+ * @description define vehicle images
+ * @dependency /Assets/Imgs/Traffic_Objects/Vehicles/Cars/car1.gif, /Assets/Imgs/Traffic_Objects/Vehicles/Trucks/truck1.png
+ */
 carImg = new Image();
 carImg.src = "/Assets/Imgs/Traffic_Objects/Vehicles/Cars/car1.gif";
 
 truckImg = new Image();
 truckImg.src = "/Assets/Imgs/Traffic_Objects/Vehicles/Trucks/truck1.png";
 
-// init traffic light images
+/**
+ * @description define traffic light images
+ * @dependency /Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Red.png, /Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Green.png
+ */
 traffLightRedImg = new Image();
 traffLightRedImg.src =
   "/Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Red.png";
@@ -388,16 +414,15 @@ traffLightGreenImg.src =
   "/Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Green.png";
 
 /**
- * @description define obstacle image names
- * add obstacleImg.png and constructionVeh{1-9}.png images from /Assets
- * @dependency /Assets/Imgs/Png//obstacleImg, /Assets/Imgs/Png//constructionVeh1, /Assets/Imgs/Png//constructionVeh2, /Assets/Imgs/Png//constructionVeh3, /Assets/Imgs/Png//constructionVeh4, /Assets/Imgs/Png//constructionVeh5, /Assets/Imgs/Png//constructionVeh6, /Assets/Imgs/Png//constructionVeh7, /Assets/Imgs/Png//constructionVeh8, /Assets/Imgs/Png//constructionVeh9
+ * @description define obstacle image names, implementing obstacleImg.png and obstacle{1-9}.png images
+ * @dependency /Assets/Imgs/Traffic_Objects/Obstacles/obstacleImg, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle1, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle2, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle3, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle4, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle5, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle6, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle7, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle8, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle9
  */
 for (var i = 0; i < 10; i++) {
   // create image
   obstacleImgs[i] = new Image();
   //set image source
   //if first image, assign obstacleImg.png image
-  //assign the rest as /Assets/Imgs/Png/constructionVeh{1-9}.png images
+  //assign the rest as /Assets/Imgs/Png/obstacle{1-9}.png images
   obstacleImgs[i].src =
     i == 0
       ? "/Assets/Imgs/Traffic_Objects/Obstacles/obstacleImg.png"
@@ -407,31 +432,63 @@ for (var i = 0; i < 10; i++) {
 }
 
 // init road images
-roadImgs1 = []; // road with lane separating line
-roadImgs2 = []; // road without lane separating line
 
-for (var i = 0; i < 4; i++) {
+// road with lane separating line
+roadImgs1 = [];
+// road without lane separating line
+roadImgs2 = [];
+
+// add up to 7 (optional) number of lanes for each road
+for (var i = 0; i < 7; i++) {
   roadImgs1[i] = new Image();
-  roadImgs1[i].src = "/Assets/Imgs/Png/road" + (i + 1) + "lanesCropWith.png";
+  roadImgs1[i].src =
+    "/Assets/Imgs/Road_Segments/With_Dividers/" + (i + 1) + "lane.png";
+
   roadImgs2[i] = new Image();
-  roadImgs2[i].src = "/Assets/Imgs/Png/road" + (i + 1) + "lanesCropWithout.png";
+  roadImgs2[i].src =
+    "/Assets/Imgs/Road_Segments/Without_Dividers/" + (i + 1) + "lane.png";
 }
 
+/**
+ * create main road with boundery lines
+ * @dependency
+ */
 roadImg1 = new Image();
 roadImg1 = roadImgs1[nLanes_main - 1];
 
+/**
+ * create main road without boundery lines
+ * @dependency
+ */
 roadImg2 = new Image();
 roadImg2 = roadImgs2[nLanes_main - 1];
 
+/**
+ * create ramp road with boundery lines
+ * @dependency
+ */
 rampImg = new Image();
 rampImg = roadImgs1[nLanes_rmp - 1];
 
-void (debug && console.log("roadImg1=", roadImg1, " rampImg=", rampImg));
+/**
+ * print road names and values for debugging purposes
+ */
+void (
+  debug &&
+  console.log(
+    "roadImg1=",
+    roadImg1,
+    "roadImg2=",
+    roadImg2,
+    " rampImg=",
+    rampImg
+  )
+);
 
 /***************************************************************
  * *************************************************************
  *
- * Draw Trajectories
+ * Define Road Trajectories
  *
  * *************************************************************
  **************************************************************/
@@ -486,7 +543,7 @@ var trajRamp = [trajRamp_x, trajRamp_y];
 /***************************************************************
  * *************************************************************
  *
- * Created Roads
+ * Declare Road Objects
  *
  * *************************************************************
  **************************************************************/
@@ -533,7 +590,7 @@ var ramp = new road(
 /***************************************************************
  * *************************************************************
  *
- * Created Network
+ * Created (Logical) Road Network
  *
  * *************************************************************
  **************************************************************/
@@ -556,9 +613,15 @@ mainroad.duTactical = duTactical;
 
 var route1 = [1]; // stays on mainroad
 var route2 = [1, 2]; // takes ramp
+
 for (var i = 0; i < mainroad.veh.length; i++) {
   mainroad.veh[i].route = Math.random() < fracOff ? route2 : route1;
-  //console.log("mainroad.veh["+i+"].route="+mainroad.veh[i].route);
+
+  // output for debugging
+  void (
+    debug &&
+    console.log("mainroad.veh[" + i + "].route=" + mainroad.veh[i].route)
+  );
 }
 
 /***************************************************************
@@ -584,6 +647,29 @@ var trafficLightControl = new TrafficLightControlEditor(
 );
 
 /**
+ * @description
+ */
+function updateDimensions() {
+  // if viewport or sizePhys changed
+  void (debug && console.log("in updateDimensions"));
+
+  // if viewport or sizePhys changed (mobile)
+  center_xPhys = center_xRel * refSizePhys; //[m]
+  center_yPhys = center_yRel * refSizePhys;
+
+  void (
+    debug &&
+    console.log(" mainroadLen=", mainroadLen) &&
+    console.log(
+      "updateDimensions: mainroadLen=",
+      mainroadLen,
+      " isSmartphone=",
+      isSmartphone
+    )
+  );
+}
+/**
+ * @description
  */
 function updateSim() {
   // (1) update times and, if canvas change,
@@ -697,6 +783,7 @@ function updateSim() {
 } // end of updateSim function
 
 /**
+ * @description
  */
 function drawSim() {
   // (0) redefine graphical aspects of road (arc radius etc) using
@@ -720,6 +807,7 @@ function drawSim() {
     scale = refSizePix / refSizePhys; // refSizePhys=constant unless mobile
 
     updateDimensions();
+
     trafficObjs.calcDepotPositions(canvas);
 
     if (true) {
@@ -836,7 +924,7 @@ function drawSim() {
 } // end of drawSim function
 
 /**
- * Running function of the sim thread (triggered by setInterval)
+ * @description Running function of the simulator's thread (triggered by setInterval)
  */
 function main_loop() {
   updateSim();
@@ -844,15 +932,16 @@ function main_loop() {
   userCanvasManip = false;
 }
 
-void (debug && console.log("first main execution"));
-
 /*********************************************************
  *
  * model initialization
  * (models and methods override control_gui.js)
  *
  *********************************************************/
-updateModels(); // defines longModelCar,-Truck,LCModelCar,-Truck,-Mandatory
+void (debug && console.log("first main execution"));
+
+// define longModelCar,-Truck,LCModelCar,-Truck,-Mandatory
+updateModels();
 
 /**
  * @todo change to showInfoString() plus strings defined inline or as external .js scripts

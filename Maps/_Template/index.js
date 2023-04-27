@@ -1,11 +1,19 @@
-/***************************************************************
+/**
+ *
+ *
+ *
+ * *************************************************************
  * *************************************************************
  *
  * User Defined Settings
  * (options displayed when user clicks settings icon)
  *
  * *************************************************************
- *************************************************************/
+ * *************************************************************
+ *
+ *
+ *
+ **/
 
 /**
  * Name of the Map
@@ -14,7 +22,7 @@
  * (2) road: handle some exceptional behavior in the "*BaWue*" scenarios
  * otherwise not needed
  */
-var scenarioString = "OnRamp";
+var scenarioString = "OffRamp";
 
 /**
  * @purpose enable/disbale debugging feature / console messaging
@@ -54,50 +62,44 @@ drawRoadIDs = true;
  *
  *
  *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
-
-/***************************************************************
+ * *************************************************************
  * *************************************************************
  *
- * general debug settings
+ * @section General debug settings
+ * @dependency debug.js
  * @done
  *
  * *************************************************************
- *************************************************************/
+ * *************************************************************
+ *
+ *
+ *
+ **/
 
 if (debug) {
-  /**
-   * @dependency debug.js
-   */
   console.log("\n\nstart main: scenarioString=", scenarioString);
-
   /**
    * @todo add explainer comment
    */
   var crashinfo = new CrashInfo();
 }
 
-/***************************************************************
+/**
+ *
+ *
+ *
+ * *************************************************************
  * *************************************************************
  *
- * Define Canvas
- * Connect with html elements
+ * @section Define Canvas variables/objects by connecting to the html elements/objects
  * @done
  *
  * *************************************************************
- *************************************************************/
+ * *************************************************************
+ *
+ *
+ *
+ **/
 
 /**
  * define simulation-Div-Window (simDivWindow) - the parent html (div) element that contains the canvas element
@@ -115,7 +117,7 @@ var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
 /**
- *  configure canvas element to take up the same screen dimensions as the parent div element (#contents)
+ * configure canvas element to take up the same screen dimensions as the parent div element (#contents)
  */
 canvas.width = simDivWindow.clientWidth;
 canvas.height = simDivWindow.clientHeight;
@@ -125,14 +127,22 @@ canvas.height = simDivWindow.clientHeight;
  */
 var aspectRatio = canvas.width / canvas.height;
 
-/***************************************************************
- **************************************************************
+/**
  *
- * Add touch listeners
+ *
+ *
+ * *************************************************************
+ * *************************************************************
+ *
+ * @section Add touch listeners
  * @done
  *
- **************************************************************
- **************************************************************/
+ * *************************************************************
+ * *************************************************************
+ *
+ *
+ *
+ **/
 
 /**
  * best approach to only run the console log if the debug flag is set to true
@@ -157,45 +167,76 @@ void (
   )
 );
 
-/***************************************************************
- * *************************************************************
- *
- * Variables
- *
- * *************************************************************
- **************************************************************/
-
 /**
- * stochasticity settings
- * (acceleration noise spec at top of models.js)
+ *
+ *
+ *
+ * *************************************************************
+ * *************************************************************
+ *
+ * @section Variables
+ *
+ * *************************************************************
+ * *************************************************************
+ *
+ *
+ *
+ **/
+
+/** *************************************************************
+ * @description run-time specification and functions
  */
+var time = 0;
+var itime = 0;
+
+// frames per second (unchanged during runtime)
+var fps = 30;
+
+var dt = timewarp / fps;
+
+/** *************************************************************
+ * @description Global graphics specification
+ */
+
+// window dimensions have changed (responsive design)
+var hasChanged = true;
+
+// if false, default unicolor background
+var drawBackground = true;
+
+// if false, only vehicles are drawn
+var drawRoad = true;
+
+// true only if user-driven geometry changes
+var userCanvasManip;
+
+var drawColormap = false;
+
+// min speed for speed colormap (drawn in red)
+var vmin_col = 0;
+
+// max speed for speed colormap (drawn in blue-violet)
+var vmax_col = 100 / 3.6;
+
 const PI = Math.PI;
 
-var driver_varcoeff = 0.15;
-// v0 and a coeff of variation (of "agility")
-// need later override road setting by
-// calling road.setDriverVariation(.);
-
-density = 0.015; // IC
-
-/**
- * adapt/override standard param settings from control_gui.js
+/** *************************************************************
+ * @description Overall Canvas Scaling / Responsiveness
  */
 
-factor_a_truck = 1; // to allow faster slowing down of the uphill trucks
+/**
+ * @name CritAspectRatio
+ * @description defines the aspect ratio used for defining the size of the canvas
+ *
+ * should be consistent with width/height in css (#contents)
+ *      the higher, the longer sim window
+ *
+ * must be the same as in css:
+ *      max-aspect-ratio: 24/19 etc.
+ */
+var critAspectRatio = 120 / 95;
 
-density = 0.015; // IC
-
-MOBIL_mandat_bSafe = 22; // standard 42
-MOBIL_mandat_bThr = 0;
-MOBIL_mandat_bias = 22;
-
-/******************************************************************
- * overall scaling
- * (critAspectRatio should be consistent with width/height in css.*contents)
- ******************************************************************/
-
-/*******************************************************
+/**
  Global overall scenario settings and graphics objects
 
  refSizePhys  => reference size in m (generally smaller side of canvas)
@@ -227,68 +268,101 @@ MOBIL_mandat_bias = 22;
   document.getElementById("contents").clientWidth; .clientHeight;
   always works!
 
-********************************************************/
+*/
 
+/**
+ * @name refSizePix
+ * @constant
+ * @description defines the refernce size of the canvas in pixels
+ *
+ * all objects scale with refSizePix (also adapts in updateDimensions)
+ *
+ * css/styleTrafficSimulationDe.css:
+ *    canvas width:  112vmin; height: 100vmin;
+ */
+var refSizePix = Math.min(canvas.height, canvas.width / critAspectRatio);
+
+/**
+ * run media query to determine if the screen is a smartphone screen
+ */
 var isSmartphone = mqSmartphone();
-// css/styleTrafficSimulationDe.css: canvas width:  112vmin; height: 100vmin;
 
-// constant; all objects scale with refSizePix / also adapt in updateDimensions
+/**
+ * @name refSizePhys
+ * @description defines the physical refernce size of the canvas based on if it is being displayed on a mobile device i.e. smartphones
+ */
 var refSizePhys = isSmartphone ? 150 : 250;
 
-var critAspectRatio = 120 / 95; // from css file: width/height of portrait #contents
-// the higher, the longer sim window
-// must be the same as in css:
-// max-aspect-ratio: 24/19 etc
-var refSizePix = Math.min(canvas.height, canvas.width / critAspectRatio);
+/**
+ * @name scale
+ * @description defines the scale / relationship between  refSizePix and refSizePhys
+ */
 var scale = refSizePix / refSizePhys;
 
-// the following remains constant
-// => road becomes more compact for smaller screens
+/** ****************************************************************
+ * @description specification of road and vehicle sizes
+ * the following remains constant
+ * road already becomes more compact for smaller screens
+ */
 
-//******************************************************************
-// specification of road width and vehicle sizes
-// remains constant => road becomes more compact for smaller screens
-//******************************************************************
+/**
+ * define the lane width for each road
+ */
+var laneWidth = 7;
 
-var laneWidth = 7; // remains constant => road becomes more compact for smaller
-// var laneWidthRamp=5; // main lanewidth used
-var nLanes_main = 1; // zero based i.e. 0=1
+/**
+ * define the number of lanes each road has
+ */
+var nLanes_main = 1;
 var nLanes_rmp = 1;
 
-var car_length = 7; // car length in m
-var car_width = 5; // car width in m
-var truck_length = 15; // trucks
+/**
+ * define car size (in meters)
+ */
+var car_length = 7;
+var car_width = 5;
+
+/**
+ * define truck size (in meters)
+ */
+var truck_length = 15;
 var truck_width = 7;
 
-//********************************************************************
-// Global graphics specification
-//********************************************************************
+/** ****************************************************************
+ * @description stochasticity settings
+ * also see (acceleration noise spec at top of models.js)
+ */
 
-var hasChanged = true; // window dimensions have changed (responsive design)
+/**
+ * v0 and a coeff of variation (of "agility")
+ * need later override road setting by
+ * calling road.setDriverVariation(.);
+ */
+var driver_varcoeff = 0.15;
 
-var drawBackground = true; // if false, default unicolor background
-var drawRoad = true; // if false, only vehicles are drawn
-var userCanvasManip; // true only if user-driven geometry changes
+/** ****************************************************************
+ * @description Override defaults / set control_gui parameters
+ * @dependency control_gui.js
+ */
 
-var drawColormap = false;
-var vmin_col = 0; // min speed for speed colormap (drawn in red)
-var vmax_col = 100 / 3.6; // max speed for speed colormap (drawn in blue-violet)
+// IC
+density = 0.015;
 
-//********************************************
-// run-time specification and functions
-//********************************************
+MOBIL_mandat_bSafe = 22; // standard 42
+MOBIL_mandat_bThr = 0;
+MOBIL_mandat_bias = 22;
 
-var time = 0;
-var itime = 0;
-var fps = 30; // frames per second (unchanged during runtime)
-var dt = timewarp / fps;
+// to allow faster slowing down of the uphill trucks
+factor_a_truck = 1;
 
-//##################################################################
-// Specification of physical road geometry and vehicle properties
-// If viewport or refSizePhys changes, then change them all => updateDimensions();
-//##################################################################
+/** ****************************************************************
+ * @description Specification of physical road geometry and vehicle properties
+ *
+ * If viewport or refSizePhys changes, then change them all by calling updateDimensions();
+ *
+ * All "Rel" (relative) settings are calculated with respect to refSizePhys (NOT refSizePix)
+ */
 
-// all relative "Rel" settings with respect to refSizePhys, not refSizePix!
 var center_xRel = 0.43;
 var center_yRel = -0.54;
 var arcRadiusRel = 0.35;
@@ -298,7 +372,7 @@ var center_xPhys = center_xRel * refSizePhys; //[m]
 var center_yPhys = center_yRel * refSizePhys;
 
 var arcRadius = arcRadiusRel * refSizePhys;
-var arcLen = arcRadius * Math.PI;
+var arcLen = arcRadius * PI;
 var straightLen = refSizePhys * critAspectRatio - center_xPhys;
 var mainroadLen = arcLen + 2 * straightLen;
 
@@ -309,14 +383,22 @@ var mainRampOffset = mainroadLen - straightLen;
 var taperLen = 0.2 * offLen;
 var offRadius = 3 * arcRadius;
 
-/***************************************************************
- **************************************************************
+/**
  *
- * @Title Menu_Sliders
+ *
+ *
+ * *************************************************************
+ * *************************************************************
+ *
+ * @section Menu_Sliders
  * @description Used for respoonding to User Configurations. Defines pre-set values for html slider (input) elements
  *
- **************************************************************
- **************************************************************/
+ * *************************************************************
+ * *************************************************************
+ *
+ *
+ *
+ **/
 
 /*************************************************************
  * adapt standard slider settings from control_gui.js
@@ -373,14 +455,22 @@ IDM_a = 0.7; // low to allow stopGo
 
 setSlider(slider_IDM_a, slider_IDM_aVal, IDM_a, 1, "m/s<sup>2</sup>");
 
-/***************************************************************
+/**
+ *
+ *
+ *
+ * *************************************************************
  * *************************************************************
  *
- * Image Insertion
+ * @section Image Insertion
  * @done
  *
  * *************************************************************
- **************************************************************/
+ * *************************************************************
+ *
+ *
+ *
+ **/
 
 /**
  * @description define background image
@@ -485,13 +575,21 @@ void (
   )
 );
 
-/***************************************************************
+/**
+ *
+ *
+ *
+ * *************************************************************
  * *************************************************************
  *
  * Define Road Trajectories
  *
  * *************************************************************
- **************************************************************/
+ * *************************************************************
+ *
+ *
+ *
+ **/
 
 function traj_x(u) {
   // physical coordinates
@@ -540,20 +638,28 @@ function trajRamp_y(u) {
 }
 var trajRamp = [trajRamp_x, trajRamp_y];
 
-/***************************************************************
+/**
+ *
+ *
+ *
+ * *************************************************************
  * *************************************************************
  *
- * Declare Road Objects
+ * Declare Road(s)
  *
  * *************************************************************
- **************************************************************/
+ * *************************************************************
+ *
+ *
+ *
+ **/
 
 var isRing = false; // 0: false; 1: true
 
 var roadIDmain = 1;
 var roadIDramp = 2;
 
-var fracTruckToleratedMismatch = 1.0; // 100% allowed=>changes only by sources
+var fracTruckToleratedMismatch = 1.0; // 100% allowed => changes only by sources
 
 /**
  * @description IC for speed
@@ -561,7 +667,8 @@ var fracTruckToleratedMismatch = 1.0; // 100% allowed=>changes only by sources
  */
 var speedInit = 20;
 
-var duTactical = 310; // anticipation distance for applying mandatory LC rules
+// anticipation distance for applying mandatory LC rules
+var duTactical = 310;
 
 var mainroad = new road(
   roadIDmain,
@@ -587,32 +694,43 @@ var ramp = new road(
   isRing
 );
 
-/***************************************************************
+/**
+ *
+ *
+ *
+ * *************************************************************
  * *************************************************************
  *
- * Created (Logical) Road Network
+ * Created (Logical) Road Network(s)
  *
  * *************************************************************
- **************************************************************/
+ * *************************************************************
+ *
+ *
+ *
+ **/
 
 // road network (network declared in canvas_gui.js)
-
 network[0] = mainroad;
 network[1] = ramp;
 
 for (var ir = 0; ir < network.length; ir++) {
-  network[ir].setDriverVariation(driver_varcoeff); //!!
+  network[ir].setDriverVariation(driver_varcoeff);
   network[ir].drawVehIDs = drawVehIDs;
 }
 
 var offrampIDs = [2];
 var offrampLastExits = [mainRampOffset + divergeLen];
 var offrampToRight = [true];
+
 mainroad.setOfframpInfo(offrampIDs, offrampLastExits, offrampToRight);
 mainroad.duTactical = duTactical;
 
-var route1 = [1]; // stays on mainroad
-var route2 = [1, 2]; // takes ramp
+// vehicle stays on mainroad
+var route1 = [1];
+
+// vehicle takes ramp
+var route2 = [1, 2];
 
 for (var i = 0; i < mainroad.veh.length; i++) {
   mainroad.veh[i].route = Math.random() < fracOff ? route2 : route1;
@@ -624,37 +742,60 @@ for (var i = 0; i < mainroad.veh.length; i++) {
   );
 }
 
-/***************************************************************
+/**
+ *
+ *
+ *
+ * *************************************************************
  * *************************************************************
  *
- * traffic objects and traffic-light control editor
+ * Declare traffic objects and traffic-light control editor
  *
  * *************************************************************
- **************************************************************/
+ * *************************************************************
+ *
+ *
+ *
+ **/
 
-// need to define canvas prior to calling cstr: e.g.,
-// TrafficObjects(canvas,nTL,nLimit,xRelDepot,yRelDepot,nRow,nCol)
-// var trafficObjs = new TrafficObjects(canvas, 1, 2, 0.6, 0.5, 2, 2);
-var trafficObjs = new TrafficObjects(canvas, 2, 2, 0.4, 0.5, 3, 2);
+/**
+ * need to define canvas prior to calling cstr: e.g.,
+ * TrafficObjects(canvas,nTL,nLimit,xRelDepot,yRelDepot,nRow,nCol)
+ */
+var trafficObjs = new TrafficObjects(canvas, 1, 2, 0.6, 0.5, 2, 2);
 
-// also needed to just switch the traffic lights
-// (then args xRelEditor,yRelEditor not relevant)
-//var trafficLightControl=new TrafficLightControlEditor(trafficObjs,0.5,0.5);
-var trafficLightControl = new TrafficLightControlEditor(
-  trafficObjs,
-  0.33,
-  0.68
-);
+/**
+ * also needed to just switch the traffic lights
+ * (then args xRelEditor,yRelEditor not relevant)
+ */
+var trafficLightControl = new TrafficLightControlEditor(trafficObjs, 0.5, 0.5);
+
+/**
+ *
+ *
+ *
+ * *************************************************************
+ * *************************************************************
+ *
+ * Simulator Functions
+ * @done
+ *
+ * *************************************************************
+ * *************************************************************
+ *
+ *
+ *
+ **/
 
 /**
  * @description
+ * @done
  */
 function updateDimensions() {
-  // if viewport or sizePhys changed
-  void (debug && console.log("in updateDimensions"));
+  void (debug && console.log("Updating Dimensions..."));
 
-  // if viewport or sizePhys changed (mobile)
-  center_xPhys = center_xRel * refSizePhys; //[m]
+  // recalculate if viewport or sizePhys changes
+  center_xPhys = center_xRel * refSizePhys;
   center_yPhys = center_yRel * refSizePhys;
 
   void (
@@ -665,11 +806,13 @@ function updateDimensions() {
       mainroadLen,
       " isSmartphone=",
       isSmartphone
-    )
+    ) &&
+    console.log("Done Updating Dimensions")
   );
 }
 /**
  * @description
+ * @done
  */
 function updateSim() {
   // (1) update times and, if canvas change,
@@ -703,20 +846,30 @@ function updateSim() {
     LCModelMandatory
   );
 
-  // updateSim (2a): update moveable speed limits
+  /**
+   * updateSim (2a):
+   * update moveable speed limits
+   */
 
   for (var i = 0; i < network.length; i++) {
     network[i].updateSpeedlimits(trafficObjs);
   }
 
-  // (2b) without this zoomback cmd, everything works but depot vehicles
-  // just stay where they have been dropped outside of a road
-  // (here more responsive than in drawSim)
+  /**
+   * updateSim (2b):
+   * without this zoomback cmd, everything works but depot vehicles
+   * just stay where they have been dropped outside of a road
+   * (here more responsive than in drawSim)
+   */
   if (userCanDropObjects && !isSmartphone && !trafficObjPicked) {
     trafficObjs.zoomBack();
   }
 
-  // updateSim (3): do central simulation update of vehicles
+  /**
+   * updateSim (3):
+   * do central simulation update of vehicles
+   */
+
   mainroad.updateLastLCtimes(dt);
   mainroad.calcAccelerations();
   mainroad.changeLanes();
@@ -742,7 +895,17 @@ function updateSim() {
     true
   );
 
-  // updateSim (5): debug output
+  /**
+   * UpdateSim (4):
+   * update detector readings
+   */
+
+  // nothing here
+
+  /**
+   * UpdateSim (5):
+   * debug output
+   */
   if (debug) {
     crashinfo.checkForCrashes(network);
     console.log("\n\nitime=", itime, ": end of updateSim loop");
@@ -784,16 +947,31 @@ function updateSim() {
 
 /**
  * @description
+ * @done
  */
 function drawSim() {
   // (0) redefine graphical aspects of road (arc radius etc) using
   // responsive design if canvas has been resized
   // isSmartphone defined in updateSim
-
   var relTextsize_vmin = isSmartphone ? 0.03 : 0.02; //xxx
   var textsize = relTextsize_vmin * Math.min(canvas.width, canvas.height);
 
+  if (debug) {
+    console.log(
+      " new total inner window dimension: ",
+      window.innerWidth,
+      " X ",
+      window.innerHeight,
+      " (full hd 16:9 e.g., 1120:630)",
+      " canvas: ",
+      canvas.width,
+      " X ",
+      canvas.height
+    );
+  }
+
   //updateDimensions();
+
   if (
     canvas.width != simDivWindow.clientWidth ||
     canvas.height != simDivWindow.clientHeight
@@ -810,7 +988,7 @@ function drawSim() {
 
     trafficObjs.calcDepotPositions(canvas);
 
-    if (true) {
+    if (debug) {
       console.log(
         "haschanged=true: new canvas dimension: ",
         canvas.width,
@@ -891,23 +1069,20 @@ function drawSim() {
   );
 
   // (5a) draw traffic objects
-
   if (userCanDropObjects && !isSmartphone) {
     trafficObjs.draw(scale);
   }
 
   // (5b) draw speedlimit-change select box
-
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   drawSpeedlBox();
 
   // drawSim (6) draw some running-time vars
   // show simulation time and detector displays
-
+  // @dependency called from timeView.js
   displayTime(time, textsize);
 
   // drawSim (7): show logical coordinates if activated
-
   if (showCoords && mouseInside) {
     showLogicalCoords(xPixUser, yPixUser);
   }
@@ -925,6 +1100,7 @@ function drawSim() {
 
 /**
  * @description Running function of the simulator's thread (triggered by setInterval)
+ * @done
  */
 function main_loop() {
   updateSim();
@@ -932,33 +1108,48 @@ function main_loop() {
   userCanvasManip = false;
 }
 
-/*********************************************************
+/**
  *
- * model initialization
- * (models and methods override control_gui.js)
  *
- *********************************************************/
+ *
+ * *************************************************************
+ * *************************************************************
+ *
+ * Simulator Execution
+ * @done
+ *
+ * *************************************************************
+ * *************************************************************
+ *
+ *
+ *
+ **/
+
 void (debug && console.log("first main execution"));
 
-// define longModelCar,-Truck,LCModelCar,-Truck,-Mandatory
+/**
+ * initialize the model(s)
+ * models and methods override control_gui.js
+ *
+ * define longModelCar,-Truck,LCModelCar,-Truck,-Mandatory
+ */
 updateModels();
 
 /**
  * @todo change to showInfoString() plus strings defined inline or as external .js scripts
  * (external scripts will need to be added to the maps html page)
+ *
  * works locally - See golfCourse.js.
+ *
  * the command "showInfoString should be placed in control_gui.js;
  */
 showInfo();
 
-/********************************************
- * @purpose start the simulation thread
- * THIS function handles everything;
- * the rest are only functions and definitions
+/**
+ * @purpose start the simulation process / thread
  *
  * Triggers:
- * (i) automatically when loading the simulation
- * (ii) when pressing the start button in *gui.js
- *  ("myRun=setInterval(main_loop, 1000/fps);")
- ********************************************/
+ *      (i) automatically when loading the simulation
+ *      (ii) when pressing the start button in *gui.js
+ */
 var myRun = setInterval(main_loop, 1000 / fps);

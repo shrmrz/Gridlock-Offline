@@ -30,13 +30,21 @@ function mqSmartphone() {
     window.innerHeight < windowSizeCrit
   );
 }
-
+/**
+ * @bug Starting in Chrome 101, the amount of information available in the User Agent string will be reduced.
+ * @solution https://stackoverflow.com/questions/68924463/a-page-or-script-is-accessing-at-least-one-of-navigator-useragent-navigator-app
+ * @returns
+ */
 function mqMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent.toLowerCase()
   );
 }
-
+/**
+ * @bug Starting in Chrome 101, the amount of information available in the User Agent string will be reduced.
+ * @solution https://stackoverflow.com/questions/68924463/a-page-or-script-is-accessing-at-least-one-of-navigator-useragent-navigator-app
+ * @returns
+ */
 function mqTablet() {
   return /iPad|Tab/i.test(navigator.userAgent.toLowerCase());
 }
@@ -72,6 +80,11 @@ function displayMediaProperties(canvas, textsize) {
     : mqMobile()
     ? "Tablet"
     : "Desktop";
+
+  /**
+   * @bug Starting in Chrome 101, the amount of information available in the User Agent string will be reduced.
+   * @solution https://stackoverflow.com/questions/68924463/a-page-or-script-is-accessing-at-least-one-of-navigator-useragent-navigator-app
+   */
   var displayStr7 = navigator.userAgent;
 
   var display_xlb = textsize;

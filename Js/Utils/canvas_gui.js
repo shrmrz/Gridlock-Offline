@@ -1,4 +1,4 @@
-console.log("reading canvas_gui.js");
+void (debug && console.log("reading canvas_gui.js"));
 
 //###############################################################
 // mouse and touch event callbacks
@@ -47,12 +47,15 @@ var network = []; // to be defined in the toplevel files, e.g. [mainroad,ramp]
 //#####################################################
 
 function addTouchListeners() {
-  //console.log("in gui.addTouchListeners()");
+  void (debug && console.log("in gui.addTouchListeners()"));
   canvas.addEventListener("touchstart", handleTouchStart, false);
   canvas.addEventListener("touchmove", handleTouchMove, false);
   canvas.addEventListener("touchend", handleTouchEnd, false);
   canvas.addEventListener("touchcancel", cancelActivities, false);
-  //console.log("addTouchListeners(): initialized some touch listeners");
+  void (
+    debug &&
+    console.log("addTouchListeners(): initialized some touch listeners")
+  );
 }
 
 //#####################################################
@@ -60,7 +63,7 @@ function addTouchListeners() {
 //#####################################################
 
 function handleTouchStart(evt) {
-  //console.log("in handleTouchStart(evt)");
+  void (debug && console.log("in handleTouchStart(evt)"));
   evt.preventDefault();
 
   getTouchCoordinates(evt); // xUser, yUser
@@ -99,7 +102,7 @@ function getTouchCoordinates(event) {
   xUser = xPixUser / scale; //scale from main js onramp.js etc
   yUser = -yPixUser / scale; //scale from main js onramp.js etc
 
-  if (false) {
+  if (debug) {
     console.log("getTouchCoordinates: xUser=", xUser, " yUser=", yUser);
   }
 }
@@ -109,7 +112,7 @@ function getTouchCoordinates(event) {
 //#####################################################
 
 function handleTouchMove(evt) {
-  //console.log("in handleTouchMove(evt)");
+  void (debug && console.log("in handleTouchMove(evt)"));
   evt.preventDefault();
 
   getTouchCoordinates(evt); // xUser, yUser
@@ -141,8 +144,16 @@ var mouseInside = false;
 
 function handleMouseEnter(event) {
   mouseInside = true;
-  //console.log("itime=",itime," in handleMouseEnter: scenarioString=",
-  //	      scenarioString," nothing to do");
+  void (
+    debug &&
+    console.log(
+      "itime=",
+      itime,
+      " in handleMouseEnter: scenarioString=",
+      scenarioString,
+      " nothing to do"
+    )
+  );
 }
 
 //#####################################################
@@ -152,7 +163,7 @@ function handleMouseEnter(event) {
 // [xy]UserDown from touchinit/mousedown
 
 function handleMouseMove(event) {
-  //console.log("in handleMouseMove(evt): mousedown=",mousedown);
+  void (debug && console.log("in handleMouseMove(evt): mousedown=", mousedown));
   getMouseCoordinates(event); //=> xUser,yUser;
   doDragging(xUser, yUser, xUserDown, yUserDown);
   drawSim(); // to be able to move objects during stopped simulation
@@ -190,7 +201,7 @@ function getMouseCoordinates(event) {
   xUser = xPixUser / scale; //scale from main js onramp.js etc
   yUser = -yPixUser / scale; //scale from main js onramp.js etc (! factor -1)
 
-  if (false) {
+  if (debug) {
     console.log("getMouseCoordinates: xUser=", xUser, " yUser=", yUser);
   }
 }
@@ -218,7 +229,7 @@ function showLogicalCoords(xPixUser, yPixUser) {
 
   var coordsStr =
     "Road " + roadID + ": u=" + u.toFixed(1) + ", lane=" + lane.toFixed(0);
-  //console.log("coordsStr=",coordsStr);
+  void (debug && console.log("coordsStr=", coordsStr));
   var textsize = 0.02 * Math.min(canvas.width, canvas.height); // 2vw;
   var coordsStr_width = 12 * textsize;
   var coordsStr_height = 1.2 * textsize;
@@ -261,7 +272,9 @@ function deactivateCoordDisplay(event) {
 // #########################################################
 
 function pickRoadOrObject(xUser, yUser) {
-  //console.log("itime=",itime," in pickRoadOrObject(canvas_gui):");
+  void (
+    debug && console.log("itime=", itime, " in pickRoadOrObject(canvas_gui):")
+  );
 
   /* priorities (at most one action initiated at a given time):
 
@@ -273,7 +286,7 @@ function pickRoadOrObject(xUser, yUser) {
 
   */
 
-  if (true) {
+  if (debug) {
     console.log(
       "itime=",
       itime,
@@ -297,15 +310,18 @@ function pickRoadOrObject(xUser, yUser) {
       yPixUser,
       distCrit_m * scale
     );
-    console.log(
-      "  pickRoadOrObject (1): test for object to be picked: pickResults=",
-      pickResults
+    void (
+      debug &&
+      console.log(
+        "  pickRoadOrObject (1): test for object to be picked: pickResults=",
+        pickResults
+      )
     );
     if (pickResults[0]) {
       trafficObject = pickResults[1];
       trafficObjPicked = true;
       roadPicked = false;
-      if (false) {
+      if (debug) {
         console.log(
           "  end pickRoadOrObject: success! picked trafficObject id=",
           trafficObject.id,
@@ -320,7 +336,7 @@ function pickRoadOrObject(xUser, yUser) {
       }
       return;
     }
-    //else console.log("  pickRoadOrObject (1): no trafficObject found");
+    //else void (debug && console.log("  pickRoadOrObject (1): no trafficObject found"));
   }
 } // canvas onmousedown or touchStart: pickRoadOrObject
 
@@ -336,7 +352,7 @@ function doDragging(xUser, yUser, xUserDown, yUserDown) {
       Math.pow(xUser - xUserDown, 2) + Math.pow(yUser - yUserDown, 2)
     );
 
-    if (false) {
+    if (debug) {
       console.log(
         "mousemove && mousedown: roadPicked=",
         roadPicked,
@@ -378,7 +394,7 @@ function doDragging(xUser, yUser, xUserDown, yUserDown) {
 //#####################################################
 
 function handleTouchEnd(evt) {
-  //console.log("in handleTouchEnd(evt)");
+  void (debug && console.log("in handleTouchEnd(evt)"));
   evt.preventDefault();
 
   getTouchCoordinates(evt); // xUser, yUser
@@ -398,7 +414,7 @@ function handleTouchEnd(evt) {
 //#####################################################
 
 function handleMouseUp(evt) {
-  if (false) {
+  if (debug) {
     console.log(
       "\n\nitime=",
       itime,
@@ -412,7 +428,7 @@ function handleMouseUp(evt) {
   finishDistortOrDropObject(xUser, yUser);
 
   drawSim();
-  if (false) {
+  if (debug) {
     console.log(
       "  end handleMouseUp(evt):",
       " speedlBoxActive=",
@@ -428,7 +444,7 @@ function handleMouseUp(evt) {
 // #########################################################
 
 function finishDistortOrDropObject(xUser, yUser) {
-  if (false) {
+  if (debug) {
     console.log(
       "itime=",
       itime,
@@ -445,18 +461,28 @@ function finishDistortOrDropObject(xUser, yUser) {
   touchdown = false;
 
   if (distDrag < distDragCrit) {
-    //console.log("  end finishDistortOrDropObject: dragging crit",
-    //		" distDrag =",distDrag,"< distDragCrit=",distDragCrit,
-    //		" not satisfied (only click) => do nothing)");
+    void (
+      debug &&
+      console.log(
+        "  end finishDistortOrDropObject: dragging crit",
+        " distDrag =",
+        distDrag,
+        "< distDragCrit=",
+        distDragCrit,
+        " not satisfied (only click) => do nothing)"
+      )
+    );
     return;
   }
 
   if (roadPicked) {
     userCanvasManip = true; // if true, new backgr, new road drawn
     roadPicked = false;
-    //console.log(" before draggedRoad.finishCRG()");
+    void (debug && console.log(" before draggedRoad.finishCRG()"));
     draggedRoad.finishCRG();
-    console.log("  end finishDistortOrDropObject: distorted road");
+    void (
+      debug && console.log("  end finishDistortOrDropObject: distorted road")
+    );
   }
 
   if (trafficObjPicked) {
@@ -471,7 +497,9 @@ function finishDistortOrDropObject(xUser, yUser) {
       scale
     );
     trafficObjPicked = false;
-    console.log("  end finishDistortOrDropObject: dropped object!");
+    void (
+      debug && console.log("  end finishDistortOrDropObject: dropped object!")
+    );
   }
 } // handleMouseUp -> finishDistortOrDropObject
 
@@ -489,7 +517,7 @@ function handleClick(event) {
   getMouseCoordinates(event); //=> xPixUser, yPixUser, xUser, yUser;
   var isDragged = distDrag > distDragCrit;
 
-  if (true) {
+  if (debug) {
     console.log(
       "\n\nitime=",
       itime,
@@ -517,7 +545,7 @@ function handleClick(event) {
       trafficLightControl.isActive &&
       trafficLightControl.mouseIsInside(xPixUser, yPixUser)
     ) {
-      console.log("handleClick: in trafficLightControl part");
+      void (debug && console.log("handleClick: in trafficLightControl part"));
       trafficLightControl.selectCycleTime([xPixUser, yPixUser]);
 
       return;
@@ -549,7 +577,7 @@ function handleClick(event) {
     // change TL if applicable or otherwise slow down vehicle if applicable
 
     if (!changingSpeedl) {
-      console.log("change TL or slow down vehicles");
+      void (debug && console.log("change TL or slow down vehicles"));
       influenceClickedVehOrTL(xUser, yUser);
     }
   }
@@ -564,7 +592,7 @@ function handleClick_golfCourse(event) {
 
   getMouseCoordinates(event); //=> xPixUser, yPixUser, xUser, yUser;
 
-  if (true) {
+  if (debug) {
     console.log(
       "\n\nitime=",
       itime,
@@ -586,11 +614,14 @@ function handleClick_golfCourse(event) {
       vehPerturbed = findResults[1];
       vehPerturbed.canOvertakeGolf = !vehPerturbed.canOvertakeGolf; // toggle
       vehPerturbed.dt_overtakeGolf = 0;
-      console.log(
-        "golfer group id ",
-        vehPerturbed.id,
-        vehPerturbed.canOvertakeGolf ? "can" : "cannot",
-        " overtake"
+      void (
+        debug &&
+        console.log(
+          "golfer group id ",
+          vehPerturbed.id,
+          vehPerturbed.canOvertakeGolf ? "can" : "cannot",
+          " overtake"
+        )
       );
     }
   }
@@ -602,8 +633,11 @@ function handleClick_golfCourse(event) {
 //##################################################
 
 function influenceClickedVehOrTL(xUser, yUser) {
-  //console.log("\n\nitime=",itime," onclick: in influenceClickedVehOrTL");
-  //console.log("yUser=",yUser," yPixUser=",yPixUser);
+  void (
+    debug &&
+    console.log("\n\nitime=", itime, " onclick: in influenceClickedVehOrTL")
+  );
+  void (debug && console.log("yUser=", yUser, " yPixUser=", yPixUser));
   if (distDrag < distDragCrit) {
     // only do actions if click, no drag
 
@@ -618,9 +652,12 @@ function influenceClickedVehOrTL(xUser, yUser) {
     if (!success) {
       slowdownVehNearestTo(xUser, yUser, distDragCrit);
 
-      console.log(
-        "  end influenceClickedVehOrTL: called",
-        " slowdownVehNearestTo"
+      void (
+        debug &&
+        console.log(
+          "  end influenceClickedVehOrTL: called",
+          " slowdownVehNearestTo"
+        )
       );
     }
   }
@@ -676,14 +713,17 @@ function activateSpeedlBox(xPixUser, yPixUser) {
 
   var results = trafficObjs.selectSignOrTL(xPixUser, yPixUser);
   var obj = results[1];
-  console.log(
-    "\n\nitime=",
-    itime,
-    " in activateSpeedlBox (canvas_gui)",
-    " results=",
-    results,
-    " type=",
-    obj.type
+  void (
+    debug &&
+    console.log(
+      "\n\nitime=",
+      itime,
+      " in activateSpeedlBox (canvas_gui)",
+      " results=",
+      results,
+      " type=",
+      obj.type
+    )
   );
 
   if (results[0]) {
@@ -715,24 +755,30 @@ function activateSpeedlBox(xPixUser, yPixUser) {
     }
   }
   var returnVal = results[0] && obj.type === "speedLimit";
-  console.log(
-    "  end activateSpeedlBox: speedlBoxActive=",
-    speedlBoxActive,
-    " returnVal=",
-    returnVal
+  void (
+    debug &&
+    console.log(
+      "  end activateSpeedlBox: speedlBoxActive=",
+      speedlBoxActive,
+      " returnVal=",
+      returnVal
+    )
   );
   return returnVal;
 }
 
 function changeSpeedl(xPixUser, yPixUser) {
-  // free: >=130, image filename figs/speedLimit_00.svg
+  // free: >=130, image filename /Assets/Imgs/old/speedLimit_00.svg
 
-  console.log(
-    "\n\nitime=",
-    itime,
-    " in changeSpeedl (canvas_gui):",
-    " speedlBoxActive=",
-    speedlBoxActive
+  void (
+    debug &&
+    console.log(
+      "\n\nitime=",
+      itime,
+      " in changeSpeedl (canvas_gui):",
+      " speedlBoxActive=",
+      speedlBoxActive
+    )
   );
   if (speedlBoxActive) {
     if (
@@ -741,7 +787,7 @@ function changeSpeedl(xPixUser, yPixUser) {
       yPixUser > speedlBoxAttr.yPixTop &&
       yPixUser < speedlBoxAttr.yPixTop + speedlBoxAttr.hPix
     ) {
-      console.log("  speedlBoxActive and clicked inside box!");
+      void (debug && console.log("  speedlBoxActive and clicked inside box!"));
 
       var obj = speedlBoxAttr.obj;
       var nLimit = speedlBoxAttr.limits.length;
@@ -750,35 +796,43 @@ function changeSpeedl(xPixUser, yPixUser) {
         (nLimit * (yPixUser - speedlBoxAttr.yPixTop)) / speedlBoxAttr.hPix
       );
       obj.value = speedlBoxAttr.limits[iSelect];
+
       var fileIndex = 0.1 * obj.value < 13 ? Math.round(0.1 * obj.value) : 0;
-      obj.image.src = "figs/speedLimit_" + fileIndex + "0.svg";
-      console.log(
-        "  traffic object of id=",
-        obj.id,
-        " has new speed limit ",
-        obj.value
+
+      obj.image.src = "/Assets/Imgs/old/speedLimit_" + fileIndex + "0.svg";
+      void (
+        debug &&
+        console.log(
+          "  traffic object of id=",
+          obj.id,
+          " has new speed limit ",
+          obj.value
+        )
       );
     }
   }
   speedlBoxActive = false; // apply only once
   hasChanged = true; // to draw the green background the next timestep
-  console.log(
-    "  end changeSpeedl: traffic object of id=",
-    speedlBoxAttr.obj.id,
-    " type=",
-    speedlBoxAttr.obj.type,
-    " has new speed limit ",
-    speedlBoxAttr.obj.value,
-    " using image file ",
-    speedlBoxAttr.obj.image.src
+  void (
+    debug &&
+    console.log(
+      "  end changeSpeedl: traffic object of id=",
+      speedlBoxAttr.obj.id,
+      " type=",
+      speedlBoxAttr.obj.type,
+      " has new speed limit ",
+      speedlBoxAttr.obj.value,
+      " using image file ",
+      speedlBoxAttr.obj.image.src
+    )
   );
   // a=gieskanne;
 }
 
 function drawSpeedlBox() {
   if (speedlBoxActive) {
-    //console.log("itime=",itime," in drawSpeedlBox (canvas)");
-    //console.log("yUser=",yUser," yPixUser=",yPixUser);
+    void (debug && console.log("itime=", itime, " in drawSpeedlBox (canvas)"));
+    void (debug && console.log("yUser=", yUser, " yPixUser=", yPixUser));
 
     var sizePix = speedlBoxAttr.sizePix;
 
@@ -815,7 +869,7 @@ function drawSpeedlBox() {
 //#####################################################
 
 function cancelActivities(event) {
-  //console.log("in cancelActivities");
+  void (debug && console.log("in cancelActivities"));
   mousedown = false;
   touchdown = false;
   roadPicked = false;
@@ -831,7 +885,15 @@ function cancelActivities(event) {
 //##############################################################
 
 function dragDepotObject(xPixUser, yPixUser) {
-  //console.log("in dragDepotObject: xPixUser=",xPixUser," yPixUser=",yPixUser);
+  void (
+    debug &&
+    console.log(
+      "in dragDepotObject: xPixUser=",
+      xPixUser,
+      " yPixUser=",
+      yPixUser
+    )
+  );
   depotObject.xPix = xPixUser;
   depotObject.yPix = yPixUser;
 }
@@ -858,7 +920,7 @@ function slowdownVehNearestTo(xUser, yUser, distCrit_m) {
       }
     }
 
-    if (false) {
+    if (debug) {
       console.log(
         "in slowdownVehNearestTo: i=",
         i,
@@ -872,7 +934,9 @@ function slowdownVehNearestTo(xUser, yUser, distCrit_m) {
 
   if (iRoad == -1 || distMin_m > distCrit_m) {
     // no success
-    console.log("influenceVehNearestTo: no suitable vehicle found!");
+    void (
+      debug && console.log("influenceVehNearestTo: no suitable vehicle found!")
+    );
     return;
   }
 
@@ -888,6 +952,9 @@ function slowdownVehNearestTo(xUser, yUser, distCrit_m) {
 }
 
 function showPhysicalCoords(xUser, yUser) {
-  //console.log("in showPhysicalCoords: xUser=",xUser," yUser=",yUser);
-  //console.log("in showPhysicalCoords");
+  void (
+    debug &&
+    console.log("in showPhysicalCoords: xUser=", xUser, " yUser=", yUser) &&
+    console.log("in showPhysicalCoords")
+  );
 }

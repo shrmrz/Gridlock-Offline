@@ -1,0 +1,111 @@
+/**
+ * text layout of sliders: tables override general text spec) 
+ */
+td {
+  font-weight: bold;
+  font-size: var(--fs-h5);
+  color: var(--color-black);
+}
+
+/* (2a) landscape: add/subtract one lane */
+
+#lanePlusDiv {
+  height: var(--btn-sq);
+  width: var(--btn-sq);
+}
+
+#laneMinusDiv {
+  height: var(--btn-sq);
+  width: var(--btn-sq);
+}
+
+#playPauseBtn {
+  height: var(--btn-sq);
+  width: var(--btn-sq);
+}
+
+/* (2a) landscape: position of the restart button: right top of simCanvas */
+
+#restartDiv {
+  height: var(--btn-sq);
+  width: var(--btn-sq);
+}
+
+/* (2a) landscape: position of the info button */
+
+#infoDiv {
+  height: var(--btn-sq);
+  width: var(--btn-sq);
+}
+
+.btnHeader {
+  justify-content: space-between;
+  width: 100%;
+  background: var(--color-secondary);
+}
+.btnHeader img {
+  width: var(--btn-sq);
+  height: var(--btn-sq);
+  overflow: hidden;
+  border-radius: 20%;
+  margin: 1.2vmin;
+}
+
+.btnHeader h2 {
+  min-width: fit-content;
+  color: var(--color-white);
+}
+
+#downloadBtn.isDownloading img {
+  display: none;
+}
+#downloadBtn.isDownloading {
+  border: 2px solid white;
+  background: var(--color-black);
+  width: var(--btn-sq);
+  height: var(--btn-sq);
+  border-radius: 20%;
+  display: block;
+}
+
+#userMenu {
+  background: var(--color-white);
+  color: var(--color-black);
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+#sliders {
+  justify-content: center;
+  align-items: start;
+  flex-wrap: wrap;
+  padding: 30px;
+}
+
+#sliders .sliderGroup {
+  min-width: 300px;
+  text-align: center;
+  justify-content: center;
+  align-items: start;
+  /*border: 1px solid var(--color-black);*/
+  border-radius: 20px;
+  padding: 1rem;
+  margin: 20px;
+  flex: 1 0 auto;
+}
+
+#sliders .sliderGroup .mainTable {
+  margin: auto;
+}
+
+#sliders .sliderGroup h3 {
+  width: 100%;
+}
+
+.btnHeader div.left {
+  justify-content: flex-start;
+}
+.btnHeader div.right {
+  justify-content: flex-end;
+}

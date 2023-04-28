@@ -1,0 +1,190 @@
+/*
+!! check/make consistent with ../js/media.js
+
+media queries: 
+https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries
+INFO: full HD =1080p (1920×1080 px), aspect ratio 5/3; 
+*/
+
+/*#############################################################*/
+/* basic settings for all aspect ratios */
+/*#############################################################*/
+
+#container {
+  width: 98vw;
+  text-align: left;
+  background-color: var(--color-black);
+}
+
+/* (2) landscape: the simulation canvas */
+#contents {
+  position: relative;
+  left: 0vw;
+  top: 0vmin;
+  width: 112vmin;
+  height: 100vmin;
+  margin-right: 0vw;
+  margin-left: 0vw;
+  z-index: 1;
+}
+
+/*******************************************************************************************/
+/* Header */
+/*******************************************************************************************/
+
+header {
+  width: 100%;
+  max-height: 100px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  padding: 0 1rem;
+}
+
+#bannerLogo {
+  padding: 1rem 0;
+  width: 20%;
+  max-height: 50px;
+  max-width: 300px;
+  margin: 0 25%;
+}
+
+#logoBanner {
+  padding: 1rem 0;
+  max-width: 300px;
+  max-height: 50px;
+  width: 40%;
+  margin: 0 3% 0 5%;
+}
+#MapIcon {
+  width: auto;
+  height: 35px;
+  padding: 0 1rem;
+}
+
+/* if the screen is smaller than 700 px */
+@media (max-width: 700px) {
+  #logoBanner {
+    display: none;
+  }
+  #MapTitle {
+    display: none;
+  }
+}
+
+/* if the screen is larger than 700 px */
+@media (min-width: 700px) {
+  #bannerLogo {
+    display: none;
+  }
+  #MapIcon {
+    display: none;
+  }
+}
+
+/*******************************************************************************************/
+/* Main Menu Styling */
+/*******************************************************************************************/
+.mainMenu {
+  padding: 1rem;
+}
+.mainMenu nav {
+  z-index: 100;
+}
+
+.mainMenu .bar {
+  width: 30px;
+  height: 5px;
+  background: var(--color-white);
+  margin: 0 5px;
+  z-index: 100;
+  transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.mainMenu .bar2 {
+  margin: 5px;
+}
+
+.mainMenu input {
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  cursor: pointer;
+  top: 1rem;
+  left: 1rem;
+  opacity: 0;
+  z-index: 101;
+}
+.mainMenu input:checked ~ .bar1 {
+  transform: rotate(45deg) translate(5px, 10px);
+}
+.mainMenu input:checked ~ .bar2 {
+  opacity: 0;
+}
+.mainMenu input:checked ~ .bar3 {
+  transform: rotate(-45deg) translate(4px, -9px);
+}
+.mainMenu input:checked ~ .mainMenuOptions {
+  transform: none;
+}
+.mainMenuOptions {
+  position: absolute;
+  width: 250px;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  margin-top: 40px;
+  z-index: 99;
+  background: var(--color-black);
+  list-style-type: none;
+  transform: translate(-100%, 0);
+  transition: 1s cubic-bezier(0.75, 0.2, 0.05, 1);
+}
+.mainMenuOptions li {
+  padding: 1rem;
+  cursor: pointer;
+}
+.mainMenuOptions li:hover {
+  background: var(--color-white);
+}
+.mainMenuOptions li:hover a {
+  color: var(--color-black);
+  font-size: var(--fs-600);
+  font-weight: 900;
+}
+
+.mainMenuOptions li a {
+  color: var(--color-white);
+  font-size: var(--fs-500);
+}
+
+/*******************************************************************************************/
+/*******************************************************************************************/
+#userMenu {
+  position: relative;
+}
+#colorBox {
+  position: absolute;
+  height: 100px;
+  width: auto;
+  top: -210px;
+  left: 0;
+  z-index: 5;
+}
+
+/*******************************************************************************************/
+/* Information window 
+/*******************************************************************************************/
+#infotext {
+  display: none;
+}
+
+/*******************************************************************************************/
+/* Map Selection window 
+/*******************************************************************************************/
+
+#scenarios {
+  display: none;
+}

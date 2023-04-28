@@ -6,13 +6,23 @@
   --color-white: white;
 
   /* Font sizes used universally throughout the project*/
-  --fs-100: 0.25rem; /* small */
-  --fs-200: 0.5rem;
-  --fs-300: 0.75rem;
-  --fs-400: 1rem; /* p */
-  --fs-500: 1.25rem; /* h5 */
-  --fs-600: 1.5rem; /* h4 */
-  --fs-700: 2rem; /* h3 */
-  --fs-800: 3rem; /* h2 */
-  --fs-900: 5rem; /* h1 */
+
+  /* Extra small */
+  --fs-xs: 1vmin;
+
+  /* Small */
+  --fs-s: 1.2vmin;
+
+  --fs-p: 1.4vmin;
+  --fs-h6: 1.6vmin;
+  --fs-h5: 1.8vmin;
+  --fs-h4: 2vmin;
+  --fs-h3: 2.2vmin;
+  --fs-h2: 2.8vmin;
+  --fs-h1: 3.4vmin;
+
+  --font: normal normal normal 30px/40px Imprint MT Shadow;
+  --font-family: Imprint MT Shadow, sans-serif;
+
+  --btn-sq: 8vmin;
 }

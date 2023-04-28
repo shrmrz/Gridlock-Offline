@@ -2,8 +2,8 @@
 
 Traffic Simulation (designed to run offline)
 
-/******************************************************************************************\*******************************************************************************************/
-/******************************************************************************************\*******************************************************************************************/
+/********************************************\*\*********************************************\*********************************************\*\*********************************************/
+/********************************************\*\*********************************************\*********************************************\*\*********************************************/
 
 # traffic-simulation.de
 
@@ -38,7 +38,7 @@ If the simulation does not run, sometimes the cause is old code in cached javasc
 
 ## Offline Usage
 
-Just download all the html files and the js/, figs/, css/, and info/
+Just download all the html files and the js/, Assets/, css/, and info/
 directories and load, e.g., _index.html_ in your favourite browser. For
 convenience and also to have access to the German version not
 contained in the repository, you can

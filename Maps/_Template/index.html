@@ -1,130 +1,69 @@
 <!DOCTYPE html>
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Gridlock: Template Map Name</title>
-    <!-- TODO Edit this  ^^^^^^^^^^^^^ -->
-
-    <link rel="stylesheet" href="/Css/variables.css" type="text/css" />
-    <link rel="stylesheet" href="/Css/main.css" type="text/css" />
-    <link rel="stylesheet" href="/Css/maps.css" type="text/css" />
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 
     <link
       rel="shortcut icon"
       type="image/png"
-      href="/Assets/Logo/gridlock-logo-with-bg-black.png"
+      href="/Assets/Logo/Png/gridlock-logo-with-bg-black.png"
     />
 
-    <script type="text/javascript" src="/Js/Mins/jquery-1.12.4.min.js"></script>
+    <title>Gridlock: Template Map Name</title>
+    <!-- @todo Edit this  ^^^^^^^^^^^^^ -->
+
+    <link rel="stylesheet" href="/Css/variables.css" type="text/css" />
+    <link rel="stylesheet" href="/Css/main.css" type="text/css" />
+    <link rel="stylesheet" href="/Css/maps.css" type="text/css" />
+    <link rel="stylesheet" href="/Css/controller.css" type="text/css" />
   </head>
 
-  <body>
+  <body class="flex column">
+    <header class="flex">
+      <nav class="mainMenu">
+        <input type="checkbox" />
+        <div class="bar bar1"></div>
+        <div class="bar bar2"></div>
+        <div class="bar bar3"></div>
+
+        <ul class="mainMenuOptions">
+          <li><a href="">Home</a></li>
+          <li><a href="">About</a></li>
+          <li><a href="">Github</a></li>
+          <li><a href="">Licensing</a></li>
+          <li><a href="">User Manual</a></li>
+          <li><a href="">Developer Manual</a></li>
+        </ul>
+      </nav>
+      <img
+        id="logoBanner"
+        src="/Assets/Logo/Svg/LogoBanner.svg"
+        alt="Gridlock Logo"
+      />
+      <img
+        id="bannerLogo"
+        src="/Assets/Logo/Svg/BannerLogo.svg"
+        alt="Gridlock Logo Text"
+      />
+      <h1 id="MapTitle" class="mapTitle">Map</h1>
+      <img
+        id="MapIcon"
+        src="/Assets/UI_Components/Icons/ic_map.svg"
+        alt="Map Option Panel Button"
+      />
+    </header>
+
     <!--<<##############################################
-        <<           start of outer container
-        <<##############################################>>-->
-    <div id="container">
-      <!--<<##############################################
-    <<                   Buttons
+    <<           start of outer container
     <<##############################################>>-->
-
-      <div id="startStopDiv">
-        <img
-          id="startStop"
-          width="100%"
-          src="figs/buttonStop3_small.png"
-          onclick="myStartStopFunction()"
-        />
-      </div>
-
-      <div id="restartDiv">
-        <img
-          id="restart"
-          width="100%"
-          src="figs/buttonRestart_small.png"
-          onclick="myRestartFunction()"
-        />
-      </div>
-
-      <div id="infoDiv">
-        <img width="100%" src="figs/infoBlue.png" onclick="showInfo()" />
-      </div>
-
-      <div id="lanePlusDiv">
-        <img width="100%" src="figs/autobahn_plus.png" onclick="addOneLane()" />
-      </div>
-
-      <div id="laneMinusDiv">
-        <img
-          width="100%"
-          src="figs/autobahn_minus.png"
-          onclick="subtractOneLane()"
-        />
-      </div>
-
-      <!--<<###################################################### 
-    -   redirects to other scenarios, defines myRedirectX
-    -######################################################>>-->
-
-      <script src="/Js/Utils/redirect.js" type="text/javascript"></script>
-
-      <div id="scenarios">
-        <center>
-          <br />
-          <img
-            width="17%"
-            src="figs/iconRing_small.jpg"
-            onclick="myRedirectRing()"
-          />
-          <img
-            width="19%"
-            src="figs/iconOnrampFig_small.jpg"
-            onclick="myRedirectOnramp()"
-          />
-          <img
-            width="19%"
-            src="figs/iconOfframpFig_small.jpg"
-            onclick="myRedirectOfframp()"
-          />
-          <img
-            width="19%"
-            src="figs/iconRoadworksFig_small.jpg"
-            onclick="myRedirectRoadworks()"
-          />
-          <img
-            width="19%"
-            src="figs/iconUphillFig_small.jpg"
-            onclick="myRedirectUphill()"
-          />
-          <img
-            width="20%"
-            src="figs/iconRoutingFig_small.jpg"
-            onclick="myRedirectRouting()"
-          />
-          <img
-            width="22%"
-            src="figs/iconRoundabout_small.jpg"
-            onclick="myRedirectRoundabout()"
-          />
-          <img
-            width="19%"
-            src="figs/iconIntersection_small.jpg"
-            onclick="myRedirectIntersection()"
-          />
-          <img
-            width="20%"
-            src="figs/iconRampmeterFig_small.jpg"
-            onclick="myRedirectOnrampBaWue()"
-          />
-        </center>
-      </div>
-
+    <div id="container">
       <!--<<##############################################
     -          the actual simulation canvas
     -##############################################>>-->
-
       <div id="contents">
         <canvas
           id="canvas"
@@ -139,18 +78,65 @@
           Your browser does not support the HTML5 canvas tag.
         </canvas>
       </div>
+    </div>
+    <!--<<##############################################
+        -           end of outer container
+    -##############################################>>-->
+    <section id="userMenu" class="flex column">
+      <!--<<##############################################
+    <<                   Buttons
+    <<##############################################>>-->
+      <div class="btnHeader flex center">
+        <div class="flex right">
+          <img
+            id="playPauseBtn"
+            src="/Assets/UI_Components/Icons/ic_pause.svg"
+            onclick="myStartStopFunction()"
+          />
 
+          <img
+            id="restartDiv"
+            src="/Assets/UI_Components/Icons/ic_restart.svg"
+            onclick="myRestartFunction()"
+          />
+          <div id="downloadBtn">
+            <img
+              src="/Assets/UI_Components/Icons/ic_download.svg"
+              onclick="downloadCallback()"
+            />
+          </div>
+        </div>
+
+        <h2>Traffic Controls</h2>
+
+        <div class="flex left">
+          <img
+            id="infoDiv"
+            src="/Assets/UI_Components/Icons/ic_settings.svg"
+            onclick="showInfo()"
+          />
+
+          <img
+            id="laneMinusDiv"
+            src="/Assets/UI_Components/Icons/ic_laneMinus.svg"
+            onclick="subtractOneLane()"
+          />
+
+          <img
+            id="lanePlusDiv"
+            src="/Assets/UI_Components/Icons/ic_lanePlus.svg"
+            onclick="addOneLane()"
+          />
+        </div>
+      </div>
       <!--<<#################################################
     -                     Sliders
     -#################################################>>-->
 
-      <div id="sliders">
-        <center>
-          <!--<<########################################################>>-->
+      <div id="sliders" class="flex">
+        <div class="sliderGroup flex column">
           <h3>Traffic Flow and General</h3>
-          <!--<<########################################################>>-->
-
-          <table id="mainTable" border="0" cellspacing="1" cellpadding="0">
+          <table class="mainTable">
             <tr>
               <td class="important">Offramp Use</td>
               <td>
@@ -207,60 +193,14 @@
               <td><div id="slider_timewarpVal"></div></td>
             </tr>
           </table>
+        </div>
 
-          <!--<<########################################################>>-->
-          <h3>Car-Following Behavior</h3>
-          <!--<<########################################################>>-->
-
-          <table id="mainTable" border="0" cellspacing="1" cellpadding="0">
-            <tr>
-              <td>Max Speed v<sub>0</sub></td>
-              <td>
-                <input
-                  id="slider_IDM_v0"
-                  type="range"
-                  min="20"
-                  max="160"
-                  step="1"
-                />
-              </td>
-              <td><div id="slider_IDM_v0Val"></div></td>
-            </tr>
-
-            <tr>
-              <td>Time Gap T</td>
-              <td>
-                <input
-                  id="slider_IDM_T"
-                  type="range"
-                  min="0.6"
-                  max="3"
-                  step="0.1"
-                />
-              </td>
-              <td><div id="slider_IDM_TVal"></div></td>
-            </tr>
-
-            <tr>
-              <td class="important">Max Accel a</td>
-              <td>
-                <input
-                  id="slider_IDM_a"
-                  type="range"
-                  min="0.3"
-                  max="4"
-                  step="0.1"
-                />
-              </td>
-              <td><div id="slider_IDM_aVal"></div></td>
-            </tr>
-          </table>
-
+        <div class="sliderGroup flex column">
           <!--<<########################################################>>-->
           <h3>Lane-Changing Behavior</h3>
           <!--<<########################################################>>-->
 
-          <table id="mainTable" border="0" cellspacing="1" cellpadding="0">
+          <table class="mainTable" border="0" cellspacing="1" cellpadding="0">
             <tr>
               <td>Politeness</td>
               <td>
@@ -317,106 +257,249 @@
               <td><div id="slider_MOBIL_bBiasRight_truckVal"></div></td>
             </tr>
           </table>
+        </div>
 
-          <!--<<##############################################>>-->
-          <!-- info-text inside sliders-div (filled by showInfo())##############################################>>-->
+        <div class="sliderGroup flex column">
+          <!--<<########################################################>>-->
+          <h3>Car-Following Behavior</h3>
+          <!--<<########################################################>>-->
 
-          <br />
-          <div id="infotext"></div>
-        </center>
+          <table class="mainTable" border="0" cellspacing="1" cellpadding="0">
+            <tr>
+              <td>Max Speed v<sub>0</sub></td>
+              <td>
+                <input
+                  id="slider_IDM_v0"
+                  type="range"
+                  min="20"
+                  max="160"
+                  step="1"
+                />
+              </td>
+              <td><div id="slider_IDM_v0Val"></div></td>
+            </tr>
+
+            <tr>
+              <td>Time Gap T</td>
+              <td>
+                <input
+                  id="slider_IDM_T"
+                  type="range"
+                  min="0.6"
+                  max="3"
+                  step="0.1"
+                />
+              </td>
+              <td><div id="slider_IDM_TVal"></div></td>
+            </tr>
+
+            <tr>
+              <td class="important">Max Accel a</td>
+              <td>
+                <input
+                  id="slider_IDM_a"
+                  type="range"
+                  min="0.3"
+                  max="4"
+                  step="0.1"
+                />
+              </td>
+              <td><div id="slider_IDM_aVal"></div></td>
+            </tr>
+          </table>
+        </div>
       </div>
-      <!-- id="sliders">-->
 
+      <!--<<##############################################>>-->
+      <!-- info-text inside sliders-div (filled by showInfo())##############################################>>-->
       <!--<<############################################## 
-    -                 Download
-    -##############################################>>-->
-
-      <div id="downloadDiv">
-        <img
-          id="download"
-          src="figs/iconDownloadStart_small.png"
-          width="100%"
-          onclick="downloadCallback()"
-        />
-      </div>
-
-      <!--<<############################################## 
-    -         Color Speed Correlation Chart 
-    -##############################################>>-->
+  -         Color Speed Correlation Chart 
+  -##############################################>>-->
       <div id="colorBox">
-        <center>
-          <img src="figs/colormap_grass.png" width="100%" />
-        </center>
+        <img src="/Assets/Imgs/old/colormap_grass.png" width="100%" />
       </div>
-    </div>
-    <!--<<##############################################
-        -         end of outer container
-    -##############################################>>-->
+      <div class="felx"></div>
+      <!-- id="sliders">-->
+    </section>
+
+    <!--<<###################################################### 
+  -   infotext
+  -######################################################>>-->
+
+    <p id="infotext"></p>
+
+    <!--<<###################################################### 
+  -   redirects to other scenarios, defines myRedirectX
+  -######################################################>>-->
+
+    <section id="scenarios">
+      <img
+        src="/Assets/Imgs/old/previews/iconRing_small.jpg"
+        onclick="pageRedirect_Ring()"
+      />
+      <img
+        src="/Assets/Imgs/old/previews/iconOnrampFig_small.jpg"
+        onclick="pageRedirect_OnRamp()"
+      />
+      <img
+        src="/Assets/Imgs/old/previews/iconOfframpFig_small.jpg"
+        onclick="pageRedirect_OffRamp()"
+      />
+      <img
+        src="/Assets/Imgs/old/previews/iconRoadworksFig_small.jpg"
+        onclick="pageRedirect_Roadworks()"
+      />
+      <img
+        src="/Assets/Imgs/old/previews/iconUphillFig_small.jpg"
+        onclick="pageRedirect_Uphill()"
+      />
+      <img
+        src="/Assets/Imgs/old/previews/iconRoutingFig_small.jpg"
+        onclick="pageRedirect_Routing()"
+      />
+      <img
+        src="/Assets/Imgs/old/previews/iconRoundabout_small.jpg"
+        onclick="pageRedirect_Roundabout()"
+      />
+      <img
+        src="/Assets/Imgs/old/previews/iconIntersection_small.jpg"
+        onclick="pageRedirect_Intersection()"
+      />
+    </section>
+    <!--
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+-->
+    <!--<<############################################################
+  -                      Debugger (Script) 
+  -         Used if debug flag is set to true in map.js file 
+  -##########################################################>>-->
+    <script src="/Js/Utils/debug.js" type="text/javascript" defer></script>
 
     <!--<<############################################################
-  - Debugger
-  - Used if debug flag is set to true in map.js file 
-  -##########################################################>>-->
-    <script src="js/debug.js"></script>
+   -                      Hard Configurations (Script) 
+   -      variables the user can NOT control (only developers)
+   -##########################################################>>-->
+
+    <!--
+       contains all variables hard coded, but mutable (for developers)
+       may be overwritten by user controls or subsequent files
+       must run first for references made in other JavaScript files
+      -->
+    <script src="/Js/Utils/data.js" type="text/javascript" defer></script>
 
     <!--<<############################################################
-  - Mandatory for Map Render 
+  -                     Soft Configurations (Script) 
+  -                    variables the users can control
   -##########################################################>>-->
 
-    <!-- specific scripts; position after def of canvas -->
-    <script src="js/control_gui.js"></script>
+    <!--
+      contains all variables hard coded, but mutable by the user (for user and developers)
+      may be overwritten by user controls or subsequent files
+      must run first for references made in other JavaScript files
+     -->
+    <script src="./config.js" type="text/javascript" defer></script>
+
+    <!--<<############################################################
+  -                   (Scripts) Mandatory for Map Rendering
+  -##########################################################>>-->
+
+    <!-- Minified version of jquery -->
+    <script
+      src="/Js/Mins/jquery-1.12.4.min.js"
+      type="text/javascript"
+      defer
+    ></script>
 
     <!-- -->
     <!-- random w seed debug -->
-    <script src="js/seedrandom.min.js"></script>
+    <script
+      src="/Js/Mins/seedrandom.min.js"
+      type="text/javascript"
+      defer
+    ></script>
+
+    <script
+      src="/Js/Utils/control_gui.js"
+      type="text/javascript"
+      defer
+    ></script>
 
     <!-- -->
-    <script src="js/media.js" type="text/javascript"></script>
+    <script src="/Js/Utils/media.js" type="text/javascript" defer></script>
 
     <!-- -->
-    <script src="js/canvas_gui.js"></script>
+    <script src="/Js/Utils/canvas_gui.js" type="text/javascript" defer></script>
 
     <!-- -->
-    <script src="js/TrafficLightControlEditor.js"></script>
+    <script
+      src="/Js/Utils/TrafficLightControlEditor.js"
+      type="text/javascript"
+      defer
+    ></script>
 
     <!-- -->
-    <script src="js/models.js"></script>
+    <script src="/Js/Utils/models.js" type="text/javascript" defer></script>
 
     <!-- -->
-    <script src="js/vehicle.js"></script>
+    <script src="/Js/Utils/vehicle.js" type="text/javascript" defer></script>
 
     <!-- -->
-    <script src="js/road.js"></script>
+    <script src="/Js/Utils/road.js" type="text/javascript" defer></script>
 
     <!-- -->
-    <script src="js/TrafficObjects.js"></script>
+    <script
+      src="/Js/Utils/TrafficObjects.js"
+      type="text/javascript"
+      defer
+    ></script>
 
     <!--<<############################################################
-  - Mandatory for Traffic Movement
+  -               (Scripts) Mandatory for Traffic Movement
   -##########################################################>>-->
 
     <!-- -->
-    <script src="js/colormanip.js"></script>
+    <script src="/Js/Utils/colormanip.js" type="text/javascript" defer></script>
 
     <!-- -->
-    <script src="js/paths.js"></script>
+    <script src="/Js/Utils/paths.js" type="text/javascript" defer></script>
 
     <!--<<############################################################
-  - Can Render Without 
+  -                 Non-Critical (Scripts) 
   -##########################################################>>-->
 
     <!-- This puts the running time (in seconds) on the top left corner of the canvas-->
-    <script src="js/timeView.js" type="text/javascript"></script>
+    <script src="/Js/Utils/timeView.js" type="text/javascript" defer></script>
 
-    <!-- -->
-    <script src="js/stationaryDetector.js"></script>
+    <!-- defines the routes and provides click functionality to redirect the user between various maps / webpages -->
+    <script src="/Js/Utils/redirect.js" type="text/javascript" defer></script>
+
+    <!-- 
+      May be useless, not sure what it does 
+      (no known effect if removed)
+    -->
+    <script
+      src="/Js/Utils/stationaryDetector.js"
+      type="text/javascript"
+      defer
+    ></script>
 
     <!--<<##############################################
-        -         map specific scripts; 
-        -           a.k.a. project file
-        -##############################################>>-->
+    -               Map Specific (Scripts) 
+    -##############################################>>-->
 
-    <script src="./templateMap.js"></script>
-    <!-- edit this  ^^^^^^^^^^^^  -->
+    <script src="./index.js" type="text/javascript" defer></script>
   </body>
 </html>

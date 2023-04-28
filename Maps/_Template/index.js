@@ -5,66 +5,6 @@
  * *************************************************************
  * *************************************************************
  *
- * User Defined Settings
- * (options displayed when user clicks settings icon)
- *
- * *************************************************************
- * *************************************************************
- *
- *
- *
- **/
-
-/**
- * Name of the Map
- * scenarioString needed in
- * (1) showInfo (control_gui) if info panels are shown
- * (2) road: handle some exceptional behavior in the "*BaWue*" scenarios
- * otherwise not needed
- */
-var scenarioString = "OffRamp";
-
-/**
- * @purpose enable/disbale debugging feature / console messaging
- * if true, then sim stops after each vehicular crash (for testing)
- * Mainly for developers
- * Set =false for public deployment)
- */
-var debug = false;
-
-/**
- * @purpose enables droppable items to be added to the canvas (such as speed limits, lights, etc.)
- */
-const userCanDropObjects = true;
-
-/**
- * @purpose show logical coords of nearest road to mouse pointer
- * definition => showLogicalCoords(.) in canvas_gui.js
- * @dependency canvas_gui.js
- */
-var showCoords = true;
-
-/**
- * @purpose draw each vehicle id number above each vehicle in simulation
- * @dependency control_gui.js
- */
-drawVehIDs = false;
-
-/**
- * @description draw the road id number on each road in simulation
- * @bug this (if set to true does not change the map to show road id)
- * @solution need to call later road.drawVehIDs=drawVehIDs
- * @dependency control_gui.js
- */
-drawRoadIDs = true;
-
-/**
- *
- *
- *
- * *************************************************************
- * *************************************************************
- *
  * @section General debug settings
  * @dependency debug.js
  * @done
@@ -123,11 +63,6 @@ canvas.width = simDivWindow.clientWidth;
 canvas.height = simDivWindow.clientHeight;
 
 /**
- *  calculate the aspect ratio of the canvas
- */
-var aspectRatio = canvas.width / canvas.height;
-
-/**
  *
  *
  *
@@ -174,7 +109,7 @@ void (
  * *************************************************************
  * *************************************************************
  *
- * @section Variables
+ * @section Run-time calculations
  *
  * *************************************************************
  * *************************************************************
@@ -183,58 +118,12 @@ void (
  *
  **/
 
-/** *************************************************************
- * @description run-time specification and functions
- */
-var time = 0;
-var itime = 0;
-
-// frames per second (unchanged during runtime)
-var fps = 30;
-
 var dt = timewarp / fps;
 
-/** *************************************************************
- * @description Global graphics specification
- */
-
-// window dimensions have changed (responsive design)
-var hasChanged = true;
-
-// if false, default unicolor background
-var drawBackground = true;
-
-// if false, only vehicles are drawn
-var drawRoad = true;
-
-// true only if user-driven geometry changes
-var userCanvasManip;
-
-var drawColormap = false;
-
-// min speed for speed colormap (drawn in red)
-var vmin_col = 0;
-
-// max speed for speed colormap (drawn in blue-violet)
-var vmax_col = 100 / 3.6;
-
-const PI = Math.PI;
-
-/** *************************************************************
- * @description Overall Canvas Scaling / Responsiveness
- */
-
 /**
- * @name CritAspectRatio
- * @description defines the aspect ratio used for defining the size of the canvas
- *
- * should be consistent with width/height in css (#contents)
- *      the higher, the longer sim window
- *
- * must be the same as in css:
- *      max-aspect-ratio: 24/19 etc.
+ *  calculate the aspect ratio of the canvas
  */
-var critAspectRatio = 120 / 95;
+var aspectRatio = canvas.width / canvas.height;
 
 /**
  Global overall scenario settings and graphics objects
@@ -269,7 +158,6 @@ var critAspectRatio = 120 / 95;
   always works!
 
 */
-
 /**
  * @name refSizePix
  * @constant
@@ -299,11 +187,108 @@ var refSizePhys = isSmartphone ? 150 : 250;
  */
 var scale = refSizePix / refSizePhys;
 
+/**
+ *
+ *
+ *
+ * *************************************************************
+ * *************************************************************
+ *
+ * @section Variables
+ *
+ * *************************************************************
+ * *************************************************************
+ *
+ *
+ *
+ **/
+const PI = Math.PI;
+
 /** ****************************************************************
  * @description specification of road and vehicle sizes
  * the following remains constant
  * road already becomes more compact for smaller screens
  */
+
+/**
+ * define the number of lanes each road has
+ */
+var nLanes_wf = 3;
+var nLanes_ef = 3;
+// var nLanes_er = 1;
+// var nLanes_nf = 3;
+// var nLanes_fs = 3;
+
+/**
+ * IC
+ * @description density of how many cars are on the road when simulation starts
+ */
+density = 0.015;
+
+/** ****************************************************************
+ * @description Override defaults / set control_gui parameters
+ * @dependency control_gui.js
+ */
+
+/**
+ * @todo no clue what these do
+ */
+MOBIL_mandat_bSafe = 22; // standard 42
+MOBIL_mandat_bThr = 0;
+MOBIL_mandat_bias = 22;
+
+// to allow faster slowing down of the uphill trucks
+factor_a_truck = 1;
+
+/** ****************************************************************
+ * @description stochasticity settings
+ * also see (acceleration noise spec at top of models.js)
+ */
+
+/**
+ * v0 and a coeff of variation (of "agility")
+ * need later override road setting by
+ * calling road.setDriverVariation(.);
+ *
+ * seems to affect the "flow" of traffic i.e. the coeffecient that determines how smoothly / similarly drivers drive / flow together
+ */
+var driver_varcoeff = 0.15;
+
+/** ****************************************************************
+ * @description Specification of physical road geometry and vehicle properties
+ *
+ * If viewport or refSizePhys changes, then change them all by calling updateDimensions();
+ *
+ * All "Rel" (relative) settings are calculated with respect to refSizePhys (NOT refSizePix)
+ */
+
+var center_xPhys = center_xRel * refSizePhys; //[m]
+var center_yPhys = center_yRel * refSizePhys;
+
+var arcRadius = arcRadiusRel * refSizePhys;
+var arcLen = arcRadius * PI;
+var straightLen = refSizePhys * critAspectRatio - center_xPhys;
+var mainroadLen = arcLen + 2 * straightLen;
+
+var offLen = offLenRel * refSizePhys;
+var divergeLen = 0.3 * offLen;
+
+var mainRampOffset = 100; // mainroadLen - straightLen;
+var taperLen = 0.1 * offLen;
+var offRadius = 1 * arcRadius;
+
+var isRing = false; // 0: false; 1: true
+
+var fracTruckToleratedMismatch = 1.0; // 100% allowed => changes only by sources
+
+/**
+ * @description IC for speed
+ * @todo write description for this variable
+ */
+var speedInit = 20;
+
+// anticipation distance for applying mandatory LC rules
+var duTactical = 310;
 
 /**
  * define the lane width for each road
@@ -313,8 +298,14 @@ var laneWidth = 7;
 /**
  * define the number of lanes each road has
  */
-var nLanes_main = 1;
-var nLanes_rmp = 1;
+var nLanes_wf = 4;
+
+var nLanes_ef = 4;
+var nLanes_er = 1;
+
+// var nLanes_nf = 4;
+
+// var nLanes_sf = 4;
 
 /**
  * define car size (in meters)
@@ -329,60 +320,17 @@ var truck_length = 15;
 var truck_width = 7;
 
 /** ****************************************************************
- * @description stochasticity settings
- * also see (acceleration noise spec at top of models.js)
- */
-
-/**
- * v0 and a coeff of variation (of "agility")
- * need later override road setting by
- * calling road.setDriverVariation(.);
- */
-var driver_varcoeff = 0.15;
-
-/** ****************************************************************
- * @description Override defaults / set control_gui parameters
- * @dependency control_gui.js
- */
-
-// IC
-density = 0.015;
-
-MOBIL_mandat_bSafe = 22; // standard 42
-MOBIL_mandat_bThr = 0;
-MOBIL_mandat_bias = 22;
-
-// to allow faster slowing down of the uphill trucks
-factor_a_truck = 1;
-
-/** ****************************************************************
  * @description Specification of physical road geometry and vehicle properties
  *
  * If viewport or refSizePhys changes, then change them all by calling updateDimensions();
  *
  * All "Rel" (relative) settings are calculated with respect to refSizePhys (NOT refSizePix)
  */
-
 var center_xRel = 0.43;
 var center_yRel = -0.54;
 var arcRadiusRel = 0.35;
 var offLenRel = 0.95;
 
-var center_xPhys = center_xRel * refSizePhys; //[m]
-var center_yPhys = center_yRel * refSizePhys;
-
-var arcRadius = arcRadiusRel * refSizePhys;
-var arcLen = arcRadius * PI;
-var straightLen = refSizePhys * critAspectRatio - center_xPhys;
-var mainroadLen = arcLen + 2 * straightLen;
-
-var offLen = offLenRel * refSizePhys;
-var divergeLen = 0.5 * offLen;
-
-var mainRampOffset = mainroadLen - straightLen;
-var taperLen = 0.2 * offLen;
-var offRadius = 3 * arcRadius;
-
 /**
  *
  *
@@ -390,8 +338,7 @@ var offRadius = 3 * arcRadius;
  * *************************************************************
  * *************************************************************
  *
- * @section Menu_Sliders
- * @description Used for respoonding to User Configurations. Defines pre-set values for html slider (input) elements
+ * Define Roads and Trajectories
  *
  * *************************************************************
  * *************************************************************
@@ -400,235 +347,51 @@ var offRadius = 3 * arcRadius;
  *
  **/
 
-/*************************************************************
- * adapt standard slider settings from control_gui.js
- * (sliders with default inits need not to be reassigned here)
- * and define variables w/o sliders in this scenario
- *************************************************************/
-
-/**********************************************************
- * @name Offramp_Flow_Slider
- * @description
- */
+// road network (network declared in canvas_gui.js)
 
 /**
- * @initial 25%
+ * east freeway
  */
-fracOff = 0.25;
-
-setSlider(slider_fracOff, slider_fracOffVal, 100 * fracOff /* 25% */, 0, "%");
-
-/**********************************************************
- * @name Inflow_Slider
- * @description
- */
-
-/**
- * @initial 4000 / 3600 = 1.11
- */
-qIn = 4600 / 3600;
-commaDigits = 0;
-
-setSlider(slider_qIn, slider_qInVal, 3600 * qIn, commaDigits, "veh/h");
-
-/**********************************************************
- * @name Truck_Perc_Slider
- * @description
- */
-
-/**
- * @initial 15%
- */
-fracTruck = 0.15;
-
-setSlider(slider_fracTruck, slider_fracTruckVal, 100 * fracTruck, 0, "%");
-
-/**********************************************************
- * @name Max_Accel_A_Slider
- * @description
- */
-
-/**
- * @initial 70%
- */
-IDM_a = 0.7; // low to allow stopGo
-
-setSlider(slider_IDM_a, slider_IDM_aVal, IDM_a, 1, "m/s<sup>2</sup>");
-
-/**
- *
- *
- *
- * *************************************************************
- * *************************************************************
- *
- * @section Image Insertion
- * @done
- *
- * *************************************************************
- * *************************************************************
- *
- *
- *
- **/
-
-/**
- * @description define background image
- * @dependency /Assets/Imgs/Backgrounds/Grass/backgroundGrass.jpg, /Assets/Imgs/Backgrounds/Grass/backgroundGrassTest.jpg
- */
-var background = new Image();
-background.src = debug
-  ? "/Assets/Imgs/Backgrounds/Grass/backgroundGrassTest.jpg"
-  : "/Assets/Imgs/Backgrounds/Grass/backgroundGrass.jpg";
-
-/**
- * @description define vehicle images
- * @dependency /Assets/Imgs/Traffic_Objects/Vehicles/Cars/car1.gif, /Assets/Imgs/Traffic_Objects/Vehicles/Trucks/truck1.png
- */
-carImg = new Image();
-carImg.src = "/Assets/Imgs/Traffic_Objects/Vehicles/Cars/car1.gif";
-
-truckImg = new Image();
-truckImg.src = "/Assets/Imgs/Traffic_Objects/Vehicles/Trucks/truck1.png";
-
-/**
- * @description define traffic light images
- * @dependency /Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Red.png, /Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Green.png
- */
-traffLightRedImg = new Image();
-traffLightRedImg.src =
-  "/Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Red.png";
-
-traffLightGreenImg = new Image();
-traffLightGreenImg.src =
-  "/Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Green.png";
-
-/**
- * @description define obstacle image names, implementing obstacleImg.png and obstacle{1-9}.png images
- * @dependency /Assets/Imgs/Traffic_Objects/Obstacles/obstacleImg, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle1, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle2, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle3, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle4, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle5, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle6, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle7, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle8, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle9
- */
-for (var i = 0; i < 10; i++) {
-  // create image
-  obstacleImgs[i] = new Image();
-  //set image source
-  //if first image, assign obstacleImg.png image
-  //assign the rest as /Assets/Imgs/Png/obstacle{1-9}.png images
-  obstacleImgs[i].src =
-    i == 0
-      ? "/Assets/Imgs/Traffic_Objects/Obstacles/obstacleImg.png"
-      : "/Assets/Imgs/Traffic_Objects/Obstacles/obstacle" + i + ".png";
-  //set obstacleImgNames equal to source info
-  obstacleImgNames[i] = obstacleImgs[i].src;
+var id_east_freeway = 1;
+function east_freeway_trajectory_x(u) {
+  return u;
 }
-
-// init road images
-
-// road with lane separating line
-roadImgs1 = [];
-// road without lane separating line
-roadImgs2 = [];
-
-// add up to 7 (optional) number of lanes for each road
-for (var i = 0; i < 7; i++) {
-  roadImgs1[i] = new Image();
-  roadImgs1[i].src =
-    "/Assets/Imgs/Road_Segments/With_Dividers/" + (i + 1) + "lane.png";
-
-  roadImgs2[i] = new Image();
-  roadImgs2[i].src =
-    "/Assets/Imgs/Road_Segments/Without_Dividers/" + (i + 1) + "lane.png";
+function east_freeway_trajectory_y(u) {
+  return -100;
 }
-
-/**
- * create main road with boundery lines
- * @dependency
- */
-roadImg1 = new Image();
-roadImg1 = roadImgs1[nLanes_main - 1];
-
-/**
- * create main road without boundery lines
- * @dependency
- */
-roadImg2 = new Image();
-roadImg2 = roadImgs2[nLanes_main - 1];
-
-/**
- * create ramp road with boundery lines
- * @dependency
- */
-rampImg = new Image();
-rampImg = roadImgs1[nLanes_rmp - 1];
-
-/**
- * print road names and values for debugging purposes
- */
-void (
-  debug &&
-  console.log(
-    "roadImg1=",
-    roadImg1,
-    "roadImg2=",
-    roadImg2,
-    " rampImg=",
-    rampImg
-  )
+var east_freeway_trajectory = [
+  east_freeway_trajectory_x,
+  east_freeway_trajectory_y,
+];
+var east_freeway = new road(
+  id_east_freeway,
+  mainroadLen,
+  laneWidth,
+  nLanes_ef,
+  east_freeway_trajectory,
+  density,
+  speedInit,
+  fracTruck,
+  isRing
 );
+network[0] = east_freeway;
 
 /**
- *
- *
- *
- * *************************************************************
- * *************************************************************
- *
- * Define Road Trajectories
- *
- * *************************************************************
- * *************************************************************
- *
- *
- *
- **/
-
-function traj_x(u) {
-  // physical coordinates
-  var dxPhysFromCenter = // left side (median), phys coordinates
-    u < straightLen
-      ? straightLen - u
-      : u > straightLen + arcLen
-      ? u - mainroadLen + straightLen
-      : -arcRadius * Math.sin((u - straightLen) / arcRadius);
-  return center_xPhys + dxPhysFromCenter;
-}
-
-function traj_y(u) {
-  // physical coordinates
-  var dyPhysFromCenter =
-    u < straightLen
-      ? arcRadius
-      : u > straightLen + arcLen
-      ? -arcRadius
-      : arcRadius * Math.cos((u - straightLen) / arcRadius);
-  return center_yPhys + dyPhysFromCenter;
-}
-var traj = [traj_x, traj_y];
-
-function trajRamp_x(u) {
-  // physical coordinates
-  var xDivergeBegin = traj_x(mainRampOffset);
+ * east offramp
+ */
+var id_east_ramp1 = 2;
+function east_ramp1_trajectory_x(u) {
+  var xDivergeBegin = east_freeway_trajectory_x(mainRampOffset);
   return u < divergeLen
     ? xDivergeBegin + u
     : xDivergeBegin +
         divergeLen +
         offRadius * Math.sin((u - divergeLen) / offRadius);
 }
-
-function trajRamp_y(u) {
-  // physical coordinates
+function east_ramp1_trajectory_y(u) {
   var yDivergeBegin =
-    traj_y(mainRampOffset) -
-    0.5 * laneWidth * (nLanes_main + nLanes_rmp) -
+    east_freeway_trajectory_y(mainRampOffset) -
+    0.5 * laneWidth * (nLanes_78e + nLanes_er) -
     0.02 * laneWidth;
   return u < taperLen
     ? yDivergeBegin + laneWidth - (laneWidth * u) / taperLen
@@ -636,63 +399,100 @@ function trajRamp_y(u) {
     ? yDivergeBegin
     : yDivergeBegin - offRadius * (1 - Math.cos((u - divergeLen) / offRadius));
 }
-var trajRamp = [trajRamp_x, trajRamp_y];
-
-/**
- *
- *
- *
- * *************************************************************
- * *************************************************************
- *
- * Declare Road(s)
- *
- * *************************************************************
- * *************************************************************
- *
- *
- *
- **/
-
-var isRing = false; // 0: false; 1: true
-
-var roadIDmain = 1;
-var roadIDramp = 2;
-
-var fracTruckToleratedMismatch = 1.0; // 100% allowed => changes only by sources
-
-/**
- * @description IC for speed
- * @todo write description for this variable
- */
-var speedInit = 20;
-
-// anticipation distance for applying mandatory LC rules
-var duTactical = 310;
-
-var mainroad = new road(
-  roadIDmain,
-  mainroadLen,
-  laneWidth,
-  nLanes_main,
-  traj,
-  density,
-  speedInit,
-  fracTruck,
-  isRing
-);
-
-var ramp = new road(
-  roadIDramp,
+var east_ramp1_trajectory = [east_ramp1_trajectory_x, east_ramp1_trajectory_y];
+var east_ramp1 = new road(
+  id_east_ramp1,
   offLen,
   laneWidth,
-  nLanes_rmp,
-  trajRamp,
+  nLanes_er,
+  east_ramp1_trajectory,
   0.1 * density,
   speedInit,
   fracTruck,
   isRing
 );
+network[1] = east_ramp1;
+
+/**
+ * west freeway
+ */
+var id_west_freeway = 3;
+function west_freeway_trajectory_x(u) {
+  return -u + 400;
+}
+function west_freeway_trajectory_y(u) {
+  return -60;
+}
+var west_freeway_trajectory = [
+  west_freeway_trajectory_x,
+  west_freeway_trajectory_y,
+];
+var west_freeway = new road(
+  id_west_freeway,
+  mainroadLen,
+  laneWidth,
+  nLanes_wf,
+  west_freeway_trajectory,
+  density,
+  speedInit,
+  fracTruck,
+  isRing
+);
+network[2] = west_freeway;
+
+// /**
+//  * south freeway
+//  */
+// var id_south_freeway = 4;
+// function south_freeway_trajectory_x(u) {
+//   return 60;
+// }
+// function south_freeway_trajectory_y(u) {
+//   return u;
+// }
+// var south_freeway_trajectory = [
+//   south_freeway_trajectory_x,
+//   south_freeway_trajectory_y,
+// ];
+// var south_freeway = new road(
+//   id_south_freeway,
+//   mainroadLen,
+//   laneWidth,
+//   nLanes_sf,
+//   south_freeway_trajectory,
+//   density,
+//   speedInit,
+//   fracTruck,
+//   isRing
+// );
+// network[3] = south_freeway;
+
+// /**
+//  * north freeway
+//  */
+// var id_north_freeway = 5;
+// function north_freeway_trajectory_x(u) {
+//   return -60;
+// }
+// function north_freeway_trajectory_y(u) {
+//   return -u + 400;
+// }
+// var north_freeway_trajectory = [
+//   north_freeway_trajectory_x,
+//   north_freeway_trajectory_y,
+// ];
+// var north_freeway = new road(
+//   id_north_freeway,
+//   mainroadLen,
+//   laneWidth,
+//   nLanes_nf,
+//   north_freeway_trajectory,
+//   density,
+//   speedInit,
+//   fracTruck,
+//   isRing
+// );
+// network[4] = north_freeway;
 
 /**
  *
@@ -710,10 +510,6 @@ var ramp = new road(
  *
  **/
 
-// road network (network declared in canvas_gui.js)
-network[0] = mainroad;
-network[1] = ramp;
-
 for (var ir = 0; ir < network.length; ir++) {
   network[ir].setDriverVariation(driver_varcoeff);
   network[ir].drawVehIDs = drawVehIDs;
@@ -723,24 +519,11 @@ var offrampIDs = [2];
 var offrampLastExits = [mainRampOffset + divergeLen];
 var offrampToRight = [true];
 
-mainroad.setOfframpInfo(offrampIDs, offrampLastExits, offrampToRight);
-mainroad.duTactical = duTactical;
+east_freeway.setOfframpInfo(offrampIDs, offrampLastExits, offrampToRight);
+east_freeway.duTactical = duTactical;
 
-// vehicle stays on mainroad
-var route1 = [1];
-
-// vehicle takes ramp
-var route2 = [1, 2];
-
-for (var i = 0; i < mainroad.veh.length; i++) {
-  mainroad.veh[i].route = Math.random() < fracOff ? route2 : route1;
-
-  // output for debugging
-  void (
-    debug &&
-    console.log("mainroad.veh[" + i + "].route=" + mainroad.veh[i].route)
-  );
-}
+north_freeway.setOfframpInfo(offrampIDs, offrampLastExits, offrampToRight);
+north_freeway.duTactical = duTactical;
 
 /**
  *
@@ -749,7 +532,7 @@ for (var i = 0; i < mainroad.veh.length; i++) {
  * *************************************************************
  * *************************************************************
  *
- * Declare traffic objects and traffic-light control editor
+ * Created Routes
  *
  * *************************************************************
  * *************************************************************
@@ -758,17 +541,59 @@ for (var i = 0; i < mainroad.veh.length; i++) {
  *
  **/
 
-/**
- * need to define canvas prior to calling cstr: e.g.,
- * TrafficObjects(canvas,nTL,nLimit,xRelDepot,yRelDepot,nRow,nCol)
- */
-var trafficObjs = new TrafficObjects(canvas, 1, 2, 0.6, 0.5, 2, 2);
+// vehicle stays on east_freeway
+var route_e = [1];
+// vehicle takes offramp
+var route_es = [1, 2];
+var route_nw = [1, 2];
 
-/**
- * also needed to just switch the traffic lights
- * (then args xRelEditor,yRelEditor not relevant)
- */
-var trafficLightControl = new TrafficLightControlEditor(trafficObjs, 0.5, 0.5);
+var route_w = [3];
+var route_n = [4];
+var route_s = [5];
+
+for (var i = 0; i < west_freeway.veh.length; i++) {
+  west_freeway.veh[i].route = route_w;
+  // output for debugging
+  void (
+    debug &&
+    console.log(
+      "west_freeway.veh[" + i + "].route=" + west_freeway.veh[i].route
+    )
+  );
+}
+
+for (var i = 0; i < east_freeway.veh.length; i++) {
+  east_freeway.veh[i].route = Math.random() < fracOff ? route_es : route_e;
+  // output for debugging
+  void (
+    debug &&
+    console.log(
+      "east_freeway.veh[" + i + "].route=" + east_freeway.veh[i].route
+    )
+  );
+}
+
+// for (var i = 0; i < north_freeway.veh.length; i++) {
+//   north_freeway.veh[i].route = route_n;
+//   // output for debugging
+//   void (
+//     debug &&
+//     console.log(
+//       "north_freeway.veh[" + i + "].route=" + north_freeway.veh[i].route
+//     )
+//   );
+// }
+
+// for (var i = 0; i < south_freeway.veh.length; i++) {
+//   south_freeway.veh[i].route = route_s;
+//   // output for debugging
+//   void (
+//     debug &&
+//     console.log(
+//       "south_freeway.veh[" + i + "].route=" + south_freeway.veh[i].route
+//     )
+//   );
+// }
 
 /**
  *
@@ -826,19 +651,46 @@ function updateSim() {
    */
   isSmartphone = mqSmartphone();
 
-  // (2) transfer effects from slider interaction and mandatory regions
-  // to the vehicles and models
+  // north_freeway.updateTruckFrac(fracTruck, fracTruckToleratedMismatch);
+  // north_freeway.updateModelsOfAllVehicles(
+  //   longModelCar,
+  //   longModelTruck,
+  //   LCModelCar,
+  //   LCModelTruck,
+  //   LCModelMandatory
+  // );
 
-  mainroad.updateTruckFrac(fracTruck, fracTruckToleratedMismatch);
-  mainroad.updateModelsOfAllVehicles(
+  // south_freeway.updateTruckFrac(fracTruck, fracTruckToleratedMismatch);
+  // south_freeway.updateModelsOfAllVehicles(
+  //   longModelCar,
+  //   longModelTruck,
+  //   LCModelCar,
+  //   LCModelTruck,
+  //   LCModelMandatory
+  // );
+
+  west_freeway.updateTruckFrac(fracTruck, fracTruckToleratedMismatch);
+  west_freeway.updateModelsOfAllVehicles(
     longModelCar,
     longModelTruck,
     LCModelCar,
     LCModelTruck,
     LCModelMandatory
   );
-  ramp.updateTruckFrac(fracTruck, fracTruckToleratedMismatch);
-  ramp.updateModelsOfAllVehicles(
+
+  // (2) transfer effects from slider interaction and mandatory regions
+  // to the vehicles and models
+
+  east_freeway.updateTruckFrac(fracTruck, fracTruckToleratedMismatch);
+  east_freeway.updateModelsOfAllVehicles(
+    longModelCar,
+    longModelTruck,
+    LCModelCar,
+    LCModelTruck,
+    LCModelMandatory
+  );
+  east_ramp1.updateTruckFrac(fracTruck, fracTruckToleratedMismatch);
+  east_ramp1.updateModelsOfAllVehicles(
     longModelCar,
     longModelTruck,
     LCModelCar,
@@ -870,24 +722,45 @@ function updateSim() {
    * do central simulation update of vehicles
    */
 
-  mainroad.updateLastLCtimes(dt);
-  mainroad.calcAccelerations();
-  mainroad.changeLanes();
-  mainroad.updateSpeedPositions();
-  mainroad.updateBCdown();
-  var route = Math.random() < fracOff ? route2 : route1;
-  mainroad.updateBCup(qIn, dt, route); // qIn=total inflow, route opt. arg.
-  //mainroad.writeVehicleRoutes(0.5*mainroad.roadLen,mainroad.roadLen);//!!!
+  // north_freeway.updateLastLCtimes(dt);
+  // north_freeway.calcAccelerations();
+  // north_freeway.changeLanes();
+  // north_freeway.updateSpeedPositions();
+  // north_freeway.updateBCdown();
+  // north_freeway.updateBCup(qIn, dt, route_n); // qIn=total inflow, route opt. arg.
 
-  ramp.updateLastLCtimes(dt); // needed since LC from main road!!
-  ramp.calcAccelerations();
-  ramp.updateSpeedPositions();
-  ramp.updateBCdown();
+  // south_freeway.updateLastLCtimes(dt);
+  // south_freeway.calcAccelerations();
+  // south_freeway.changeLanes();
+  // south_freeway.updateSpeedPositions();
+  // south_freeway.updateBCdown();
+  // south_freeway.updateBCup(qIn, dt, route_s); // qIn=total inflow, route opt. arg.
+
+  west_freeway.updateLastLCtimes(dt);
+  west_freeway.calcAccelerations();
+  west_freeway.changeLanes();
+  west_freeway.updateSpeedPositions();
+  west_freeway.updateBCdown();
+  west_freeway.updateBCup(qIn, dt, route_w); // qIn=total inflow, route opt. arg.
+
+  east_freeway.updateLastLCtimes(dt);
+  east_freeway.calcAccelerations();
+  east_freeway.changeLanes();
+  east_freeway.updateSpeedPositions();
+  east_freeway.updateBCdown();
+  var route = Math.random() < fracOff ? route_es : route_e;
+  east_freeway.updateBCup(qIn, dt, route); // qIn=total inflow, route opt. arg.
+  //east_freeway.writeVehicleRoutes(0.5*east_freeway.roadLen,east_freeway.roadLen);//!!!
+
+  east_ramp1.updateLastLCtimes(dt); // needed since LC from main road!!
+  east_ramp1.calcAccelerations();
+  east_ramp1.updateSpeedPositions();
+  east_ramp1.updateBCdown();
 
   //template: mergeDiverge(newRoad,offset,uStart,uEnd,isMerge,toRight)
   var u_antic = 20;
-  mainroad.mergeDiverge(
-    ramp,
+  east_freeway.mergeDiverge(
+    east_ramp1,
     -mainRampOffset,
     mainRampOffset + taperLen,
     mainRampOffset + divergeLen - u_antic,
@@ -912,17 +785,17 @@ function updateSim() {
     console.log(
       "mainroadLen=",
       formd(mainroadLen),
-      " mainroad.roadLen=",
-      formd(mainroad.roadLen),
-      " mainroad.offrampLastExits=",
-      formd(mainroad.offrampLastExits),
-      " ramp.roadLen=",
-      formd(ramp.roadLen),
+      " east_freeway.roadLen=",
+      formd(east_freeway.roadLen),
+      " east_freeway.offrampLastExits=",
+      formd(east_freeway.offrampLastExits),
+      " east_ramp1.roadLen=",
+      formd(east_ramp1.roadLen),
       " mainRampOffset=",
       formd(mainRampOffset)
     );
     console.log(
-      "mergeDiverge(ramp",
+      "mergeDiverge(east_ramp1",
       ",",
       formd(-mainRampOffset),
       ",",
@@ -932,16 +805,16 @@ function updateSim() {
       ")"
     );
     console.log("\nmainroad vehicles:");
-    mainroad.writeVehiclesSimple();
-    ramp.writeVehiclesSimple();
+    east_freeway.writeVehiclesSimple();
+    east_ramp1.writeVehiclesSimple();
 
     onlyTL = true;
     trafficObjs.writeObjects(onlyTL); //the trafficObjs general TL objects
     onlyTL = true;
-    mainroad.writeTrafficLights(); // the road's operational TL objects
-    ramp.writeTrafficLights();
-    mainroad.writeDepotVehObjects();
-    ramp.writeDepotVehObjects();
+    east_freeway.writeTrafficLights(); // the road's operational TL objects
+    east_ramp1.writeTrafficLights();
+    east_freeway.writeDepotVehObjects();
+    east_ramp1.writeDepotVehObjects();
   }
 } // end of updateSim function
 
@@ -1043,23 +916,25 @@ function drawSim() {
     }
   }
 
-  // (3) draw mainroad and ramp (offramp "bridge" => draw last)
+  // (3) draw east_freeway and east_ramp1 (offramp "bridge" => draw last)
   // and vehicles (directly after frawing resp road or separately, depends)
 
   // (always drawn; changedGeometry only triggers making a new lookup table)
 
-  //!! all args at and after umin,umax=0,ramp.roadLen are optional
+  //!! all args at and after umin,umax=0,east_ramp1.roadLen are optional
   // here only example for complete args (only in coffeemeterGame relevant
   // !!! DOS in road.draw, OK in road.drawVehicles
 
   var changedGeometry = userCanvasManip || hasChanged || itime <= 1;
-  ramp.draw(rampImg, rampImg, scale, changedGeometry);
-  mainroad.draw(roadImg1, roadImg2, scale, changedGeometry);
 
   // (4) draw vehicles
+  east_ramp1.draw(rampImg, rampImg, scale, changedGeometry);
+  east_freeway.draw(roadImg1, roadImg2, scale, changedGeometry);
+  west_freeway.draw(roadImg1, roadImg2, scale, changedGeometry);
+  // north_freeway.draw(roadImg1, roadImg2, scale, changedGeometry);
+  // south_freeway.draw(roadImg1, roadImg2, scale, changedGeometry);
 
-  ramp.drawVehicles(carImg, truckImg, obstacleImgs, scale, vmin_col, vmax_col);
-  mainroad.drawVehicles(
+  east_ramp1.drawVehicles(
     carImg,
     truckImg,
     obstacleImgs,
@@ -1067,7 +942,38 @@ function drawSim() {
     vmin_col,
     vmax_col
   );
-
+  east_freeway.drawVehicles(
+    carImg,
+    truckImg,
+    obstacleImgs,
+    scale,
+    vmin_col,
+    vmax_col
+  );
+  west_freeway.drawVehicles(
+    carImg,
+    truckImg,
+    obstacleImgs,
+    scale,
+    vmin_col,
+    vmax_col
+  );
+  // north_freeway.drawVehicles(
+  //   carImg,
+  //   truckImg,
+  //   obstacleImgs,
+  //   scale,
+  //   vmin_col,
+  //   vmax_col
+  // );
+  // south_freeway.drawVehicles(
+  //   carImg,
+  //   truckImg,
+  //   obstacleImgs,
+  //   scale,
+  //   vmin_col,
+  //   vmax_col
+  // );
   // (5a) draw traffic objects
   if (userCanDropObjects && !isSmartphone) {
     trafficObjs.draw(scale);
@@ -1115,6 +1021,106 @@ function main_loop() {
  * *************************************************************
  * *************************************************************
  *
+ * Declare traffic objects and traffic-light control editor
+ *
+ * *************************************************************
+ * *************************************************************
+ *
+ *
+ *
+ **/
+
+/**
+ * need to define canvas prior to calling cstr: e.g.,
+ * TrafficObjects(canvas,nTL,nLimit,xRelDepot,yRelDepot,nRow,nCol)
+ */
+var trafficObjs = new TrafficObjects(canvas, 2, 2, 0.35, 0.15, 3, 2);
+
+/**
+ * also needed to just switch the traffic lights
+ * (then args xRelEditor,yRelEditor not relevant)
+ */
+var trafficLightControl = new TrafficLightControlEditor(trafficObjs, 0.5, 0.5);
+
+/**
+ *
+ *
+ *
+ * *************************************************************
+ * *************************************************************
+ *
+ * @section Menu_Sliders
+ * @description Used for respoonding to User Configurations. Defines pre-set values for html slider (input) elements
+ *
+ * *************************************************************
+ * *************************************************************
+ *
+ *
+ *
+ **/
+
+/*************************************************************
+ * adapt standard slider settings from control_gui.js
+ * (sliders with default inits need not to be reassigned here)
+ * and define variables w/o sliders in this scenario
+ *************************************************************/
+
+/**********************************************************
+ * @name Offramp_Flow_Slider
+ * @description
+ */
+
+/**
+ * @initial 25%
+ */
+fracOff = 0.25;
+
+setSlider(slider_fracOff, slider_fracOffVal, 100 * fracOff /* 25% */, 0, "%");
+
+/**********************************************************
+ * @name Inflow_Slider
+ * @description
+ */
+
+/**
+ * @initial 4000 / 3600 = 1.11
+ */
+qIn = 4600 / 3600;
+commaDigits = 0;
+
+setSlider(slider_qIn, slider_qInVal, 3600 * qIn, commaDigits, "veh/h");
+
+/**********************************************************
+ * @name Truck_Perc_Slider
+ * @description
+ */
+
+/**
+ * @initial 15%
+ */
+fracTruck = 0.15;
+
+setSlider(slider_fracTruck, slider_fracTruckVal, 100 * fracTruck, 0, "%");
+
+/**********************************************************
+ * @name Max_Accel_A_Slider
+ * @description
+ */
+
+/**
+ * @initial 70%
+ */
+IDM_a = 0.7; // low to allow stopGo
+
+setSlider(slider_IDM_a, slider_IDM_aVal, IDM_a, 1, "m/s<sup>2</sup>");
+
+/**
+ *
+ *
+ *
+ * *************************************************************
+ * *************************************************************
+ *
  * Simulator Execution
  * @done
  *
@@ -1142,6 +1148,7 @@ updateModels();
  * works locally - See golfCourse.js.
  *
  * the command "showInfoString should be placed in control_gui.js;
+ * @dependency control_gui.js
  */
 showInfo();
 

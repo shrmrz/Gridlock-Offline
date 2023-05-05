@@ -62,11 +62,10 @@ drawVehIDs = false;
  * @solution need to call later road.drawVehIDs=drawVehIDs
  * @dependency control_gui.js
  */
-drawRoadIDs = true;
+drawRoadIDs = false;
 
 var obstacleImgs = [];
 var obstacleImgNames = [];
-
 /** *************************************************************
  * dynamic values
  */
@@ -74,7 +73,9 @@ var obstacleImgNames = [];
 // min speed for speed colormap (drawn in red)
 var vmin_col = 0;
 
-// max speed for speed colormap (drawn in blue-violet)
+/**
+ * max speed for speed colormap (drawn in blue-violet)
+ */
 var vmax_col = 100 / 3.6;
 
 // true only if user-driven geometry changes

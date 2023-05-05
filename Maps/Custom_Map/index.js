@@ -42,12 +42,14 @@ if (debug) {
  **/
 
 /**
- * define simulation-Div-Window (simDivWindow) - the parent html (div) element that contains the canvas element
+ * @description define simulation-Div-Window (simDivWindow) - the parent html (div) element that contains the canvas element
+ *
  */
 var simDivWindow = document.getElementById("contents");
 
 /**
- * define canvas (canvas) - the html element that draws the simulation,
+ * @description define canvas (canvas) - the html element that draws the simulation,
+ *
  */
 var canvas = document.getElementById("canvas");
 

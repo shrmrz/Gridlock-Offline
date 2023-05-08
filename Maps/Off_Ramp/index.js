@@ -376,10 +376,10 @@ background.src = debug
  * @dependency /Assets/Imgs/Traffic_Objects/Vehicles/Cars/car1.gif, /Assets/Imgs/Traffic_Objects/Vehicles/Trucks/truck1.png
  */
 carImg = new Image();
-carImg.src = "/Assets/Imgs/Traffic_Objects/Vehicles/Cars/car1.gif";
+carImg.src = "../../Assets/Imgs/Traffic_Objects/Vehicles/Cars/car1.gif";
 
 truckImg = new Image();
-truckImg.src = "/Assets/Imgs/Traffic_Objects/Vehicles/Trucks/truck1.png";
+truckImg.src = "../../Assets/Imgs/Traffic_Objects/Vehicles/Trucks/truck1.png";
 
 /**
  * @description define traffic light images

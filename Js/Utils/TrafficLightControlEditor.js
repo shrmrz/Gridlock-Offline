@@ -37,10 +37,10 @@ function TrafficLightControlEditor(trafficObjects, xRelEditor, yRelEditor) {
   // create image repositories
 
   this.knobYellow = new Image();
-  this.knobYellow.src = "/Assets/Imgs/old/knobYellow.png";
+  this.knobYellow.src = "../../Assets/Imgs/old/knobYellow.png";
 
   this.buttonDone = new Image();
-  this.buttonDone.src = "/Assets/Imgs/old/buttons/buttonDone.png";
+  this.buttonDone.src = "../../Assets/Imgs/old/buttons/buttonDone.png";
 
   this.cycleTimes = [30, 40, 50, 60, 80, 100, 120];
   this.cycleTimeIndex = 3;

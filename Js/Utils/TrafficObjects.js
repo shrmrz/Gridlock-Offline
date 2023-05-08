@@ -134,7 +134,8 @@ function TrafficObjects(canvas, nTL, nLimit, xRelDepot, yRelDepot, nRow, nCol) {
   this.imgSpeedlRepo = [];
   for (var i = 0; i < 13; i++) {
     this.imgSpeedlRepo[i] = new Image();
-    this.imgSpeedlRepo[i].src = "/Assets/Imgs/old/speedLimit_" + i + "0.svg";
+    this.imgSpeedlRepo[i].src =
+      "../../Assets/Imgs/old/speedLimit_" + i + "0.svg";
   }
 
   this.imgObstRepo = [];

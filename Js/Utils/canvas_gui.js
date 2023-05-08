@@ -799,7 +799,7 @@ function changeSpeedl(xPixUser, yPixUser) {
 
       var fileIndex = 0.1 * obj.value < 13 ? Math.round(0.1 * obj.value) : 0;
 
-      obj.image.src = "/Assets/Imgs/old/speedLimit_" + fileIndex + "0.svg";
+      obj.image.src = "../../Assets/Imgs/old/speedLimit_" + fileIndex + "0.svg";
       void (
         debug &&
         console.log(

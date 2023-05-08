@@ -284,7 +284,7 @@ var fracTruckToleratedMismatch = 1.0; // 100% allowed => changes only by sources
  */
 var speedInit = 20;
 
-// anticipation distance for applying mandatory LC rules
+// anticipation distance for applying mandatory LC (LC = lane change?) rules
 var duTactical = 310;
 /**
  *
@@ -501,7 +501,6 @@ void (
  */
 var id_east_freeway = 1;
 function east_freeway_trajectory_x(u) {
-  // physical coordinates
   return u;
 }
 function east_freeway_trajectory_y(u) {
@@ -529,7 +528,6 @@ network[0] = east_freeway;
  */
 var id_east_ramp1 = 2;
 function east_ramp1_trajectory_x(u) {
-  // physical coordinates
   var xDivergeBegin = east_freeway_trajectory_x(mainRampOffset);
   return u < divergeLen
     ? xDivergeBegin + u
@@ -539,7 +537,6 @@ function east_ramp1_trajectory_x(u) {
         offRadius * Math.sin((u - divergeLen) / offRadius);
 }
 function east_ramp1_trajectory_y(u) {
-  // physical coordinates
   var yDivergeBegin =
     east_freeway_trajectory_y(mainRampOffset) -
     0.5 * laneWidth * (nLanes_ef + nLanes_er) -
@@ -692,58 +689,6 @@ var north_ramp1 = new road(
 );
 network[5] = north_ramp1;
 
-/*
-function traj_x(u) {
-  return u;
-  // physical coordinates
-  //return u;
-  var dxPhysFromCenter = // left side (median), phys coordinates
-    u < straightLen
-      ? straightLen - u
-      : u > straightLen + arcLen
-      ? u - mainroadLen + straightLen
-      : -arcRadius * Math.sin((u - straightLen) / arcRadius);
-  return center_xPhys + dxPhysFromCenter;
-}
-
-function traj_y(u) {
-  return -100;
-  //return -100;
-  // physical coordinates
-  var dyPhysFromCenter =
-    u < straightLen
-      ? arcRadius
-      : u > straightLen + arcLen
-      ? -arcRadius
-      : arcRadius * Math.cos((u - straightLen) / arcRadius);
-  return center_yPhys + dyPhysFromCenter;
-}
-var traj = [traj_x, traj_y];
-
-function trajRamp_x(u) {
-  // physical coordinates
-  var xDivergeBegin = traj_x(mainRampOffset);
-  return u < divergeLen
-    ? xDivergeBegin + u
-    : xDivergeBegin +
-        divergeLen +
-        offRadius * Math.sin((u - divergeLen) / offRadius);
-}
-
-function trajRamp_y(u) {
-  // physical coordinates
-  var yDivergeBegin =
-    traj_y(mainRampOffset) -
-    0.5 * laneWidth * (nLanes_ef + nLanes_er) -
-    0.02 * laneWidth;
-  return u < taperLen
-    ? yDivergeBegin + laneWidth - (laneWidth * u) / taperLen
-    : u < divergeLen
-    ? yDivergeBegin
-    : yDivergeBegin - offRadius * (1 - Math.cos((u - divergeLen) / offRadius));
-}
-var trajRamp = [trajRamp_x, trajRamp_y];
-*/
 /**
  *
  *
@@ -760,31 +705,6 @@ var trajRamp = [trajRamp_x, trajRamp_y];
  *
  **/
 
-/*
-var mainroad = new road(
-  roadIDmain,
-  mainroadLen,
-  laneWidth,
-  nLanes_ef,
-  traj,
-  density,
-  speedInit,
-  fracTruck,
-  isRing
-);
-
-var ramp = new road(
-  roadIDramp,
-  offLen,
-  laneWidth,
-  nLanes_er,
-  trajRamp,
-  0.1 * density,
-  speedInit,
-  fracTruck,
-  isRing
-);
-*/
 /**
  *
  *
@@ -841,7 +761,7 @@ north_freeway.duTactical = duTactical;
 // vehicle stays on east_freeway
 var route_e = [1];
 // vehicle takes offramp
-var route_es = [1, 2];
+var route_en = [1, 2];
 var route_w = [3];
 var route_s = [4];
 var route_n = [5];
@@ -854,8 +774,7 @@ var route1 = [1];
 var route2 = [1, 2];
 */
 for (var i = 0; i < east_freeway.veh.length; i++) {
-  east_freeway.veh[i].route = Math.random() < fracOff ? route_es : route_e;
-
+  east_freeway.veh[i].route = Math.random() < fracOff ? route_en : route_e;
   // output for debugging
   void (
     debug &&
@@ -983,24 +902,6 @@ function updateSim() {
 
   // (2) transfer effects from slider interaction and mandatory regions
   // to the vehicles and models
-  /*
-  mainroad.updateTruckFrac(fracTruck, fracTruckToleratedMismatch);
-  mainroad.updateModelsOfAllVehicles(
-    longModelCar,
-    longModelTruck,
-    LCModelCar,
-    LCModelTruck,
-    LCModelMandatory
-  );
-  ramp.updateTruckFrac(fracTruck, fracTruckToleratedMismatch);
-  ramp.updateModelsOfAllVehicles(
-    longModelCar,
-    longModelTruck,
-    LCModelCar,
-    LCModelTruck,
-    LCModelMandatory
-  );
-*/
 
   north_freeway.updateTruckFrac(fracTruck, fracTruckToleratedMismatch);
   north_freeway.updateModelsOfAllVehicles(
@@ -1058,6 +959,7 @@ function updateSim() {
     LCModelTruck,
     LCModelMandatory
   );
+
   /**
    * updateSim (2a):
    * update moveable speed limits
@@ -1087,7 +989,7 @@ function updateSim() {
   mainroad.changeLanes();
   mainroad.updateSpeedPositions();
   mainroad.updateBCdown();
-  var route = Math.random() < fracOff ? route_es : route_e;
+  var route = Math.random() < fracOff ? route_en : route_e;
   mainroad.updateBCup(qIn, dt, route); // qIn=total inflow, route opt. arg.
   //mainroad.writeVehicleRoutes(0.5*mainroad.roadLen,mainroad.roadLen);//!!!
 
@@ -1129,7 +1031,7 @@ function updateSim() {
   east_freeway.changeLanes();
   east_freeway.updateSpeedPositions();
   east_freeway.updateBCdown();
-  var routeE = Math.random() < fracOff ? route_es : route_e;
+  var routeE = Math.random() < fracOff ? route_en : route_e;
   east_freeway.updateBCup(qIn, dt, routeE); // qIn=total inflow, route opt. arg.
   //east_freeway.writeVehicleRoutes(0.5*east_freeway.roadLen,east_freeway.roadLen);//!!!
 

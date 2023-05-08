@@ -9,6 +9,7 @@ function pageRedirect_Ring() {
 function pageRedirect_OnRamp() {
   window.location.href = "../../Maps/On_Ramp/index.html";
 }
+6;
 
 function pageRedirect_OffRamp() {
   window.location.href = "../../Maps/Off_Ramp/index.html";

@@ -54,14 +54,14 @@ of the traffic objects (traffObj=trafficObj[i])
 
 
 * The image files of the traffic objects should have canonical names 
-  /Assets/Imgs/old/<type>_<value>.png for objects with variable state, or 
-  /Assets/Imgs/old/<type>_<id>.png for fixed objects (obstacles)
+  ../../Assets/Imgs/old/<type>_<value>.png for objects with variable state, or 
+  ../../Assets/Imgs/old/<type>_<id>.png for fixed objects (obstacles)
 
   - trafficLight_red.png, trafficLight_green.png
   - speedLimit_00.svg (=no limit), speedLimit_10.png, speedLimit_20.png, ...
   - obstacle_50.png, obstacle_51.png, ...
 
-  all image files should be in <htmlDir>/Assets/Imgs/old/
+  all image files should be in <htmlDir>../../Assets/Imgs/old/
  
 #############################################################
 */
@@ -123,13 +123,13 @@ function TrafficObjects(canvas, nTL, nLimit, xRelDepot, yRelDepot, nRow, nCol) {
 
   this.imgTLgreen = new Image();
   this.imgTLgreen.src =
-    "/Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Green.png";
+    "../../Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Green.png";
   this.imgTLred = new Image();
   this.imgTLred.src =
-    "/Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Red.png";
+    "../../Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Red.png";
   this.imgTyellow = new Image();
   this.imgTyellow.src =
-    "/Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Yellow.png";
+    "../../Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Yellow.png";
 
   this.imgSpeedlRepo = [];
   for (var i = 0; i < 13; i++) {
@@ -142,7 +142,7 @@ function TrafficObjects(canvas, nTL, nLimit, xRelDepot, yRelDepot, nRow, nCol) {
   for (var i = 0; i < Math.min(this.nObst, this.nObstMax); i++) {
     this.imgObstRepo[i] = new Image();
     this.imgObstRepo[i].src =
-      "/Assets/Imgs/Traffic_Objects/Obstacles/obstacle" + (1 + i) + ".png";
+      "../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle" + (1 + i) + ".png";
     void (
       debug &&
       console.log("i=", i, " this.imgObstRepo[i].src=", this.imgObstRepo[i].src)

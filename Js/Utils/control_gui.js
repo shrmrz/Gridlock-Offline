@@ -69,11 +69,11 @@ function myStartStopFunction() {
   if (isStopped) {
     isStopped = false;
     document.getElementById("playPauseBtn").src =
-      "/Assets/UI_Components/Icons/ic_pause.svg";
+      "../../Assets/UI_Components/Icons/ic_pause.svg";
     myRun = setInterval(main_loop, 1000 / fps);
   } else {
     document.getElementById("playPauseBtn").src =
-      "/Assets/UI_Components/Icons/ic_play.svg";
+      "../../Assets/UI_Components/Icons/ic_play.svg";
     isStopped = true;
   }
 }
@@ -116,7 +116,7 @@ function myRestartFunction() {
   if (isStopped) {
     isStopped = false;
     document.getElementById("playPauseBtn").src =
-      "/Assets/UI_Components/Icons/ic_play.svg";
+      "../../Assets/UI_Components/Icons/ic_play.svg";
     myRun = setInterval(main_loop, 1000 / fps);
   }
 }
@@ -385,17 +385,17 @@ function showInfo() {
   //if(infoLevel===0){document.getElementById("infotext").innerHTML="info/info_gui.html"}
 
   if (infoLevel === 0) {
-    $("#infotext").load("/Docs/Info/info_gui.html");
+    $("#infotext").load("../../Docs/Info/info_gui.html");
   } else if (infoLevel === 1) {
     $("#infotext").load(scenarioFile);
   } else if (infoLevel === 2) {
-    $("#infotext").load("/Docs/Info/info_IDM.html");
+    $("#infotext").load("../../Docs/Info/info_IDM.html");
   } else if (infoLevel === 3) {
-    $("#infotext").load("/Docs/Info/info_MOBIL.html");
+    $("#infotext").load("../../Docs/Info/info_MOBIL.html");
   } else if (infoLevel === 4) {
-    $("#infotext").load("/Docs/Info/info_BC.html");
+    $("#infotext").load("../../Docs/Info/info_BC.html");
   } else if (infoLevel === 5) {
-    $("#infotext").load("/Docs/Info/info_Numerics.html");
+    $("#infotext").load("../../Docs/Info/info_Numerics.html");
   }
   infoLevel++;
   infoLevel = infoLevel % nLevels;
@@ -1077,7 +1077,7 @@ function downloadCallback() {
     performDownload();
     downloadActive = false;
     document.getElementById("downloadBtn").src =
-      "/Assets/Imgs/old/buttons/iconDownloadStart_small.png";
+      "../../Assets/Imgs/old/buttons/iconDownloadStart_small.png";
   } else {
     // title/header lines
     for (var i = 0; i < network.length; i++) {
@@ -1103,7 +1103,7 @@ function downloadCallback() {
     }
     downloadActive = true;
     document.getElementById("downloadBtn").src =
-      "/Assets/Imgs/old/buttons/iconDownloadFinish_small.png";
+      "../../Assets/Imgs/old/buttons/iconDownloadFinish_small.png";
   }
 }
 

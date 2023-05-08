@@ -364,16 +364,16 @@ setSlider(slider_IDM_a, slider_IDM_aVal, IDM_a, 1, "m/s<sup>2</sup>");
 
 /**
  * @description define background image
- * @dependency /Assets/Imgs/Backgrounds/Grass/backgroundGrass.jpg, /Assets/Imgs/Backgrounds/Grass/backgroundGrassTest.jpg
+ * @dependency ../../Assets/Imgs/Backgrounds/Grass/backgroundGrass.jpg, ../../Assets/Imgs/Backgrounds/Grass/backgroundGrassTest.jpg
  */
 var background = new Image();
 background.src = debug
-  ? "/Assets/Imgs/Backgrounds/Grass/backgroundGrassTest.jpg"
-  : "/Assets/Imgs/Backgrounds/Grass/backgroundGrass.jpg";
+  ? "../../Assets/Imgs/Backgrounds/Grass/backgroundGrassTest.jpg"
+  : "../../Assets/Imgs/Backgrounds/Grass/backgroundGrass.jpg";
 
 /**
  * @description define vehicle images
- * @dependency /Assets/Imgs/Traffic_Objects/Vehicles/Cars/car1.gif, /Assets/Imgs/Traffic_Objects/Vehicles/Trucks/truck1.png
+ * @dependency ../../Assets/Imgs/Traffic_Objects/Vehicles/Cars/car1.gif, ../../Assets/Imgs/Traffic_Objects/Vehicles/Trucks/truck1.png
  */
 carImg = new Image();
 carImg.src = "../../Assets/Imgs/Traffic_Objects/Vehicles/Cars/car1.gif";
@@ -383,30 +383,30 @@ truckImg.src = "../../Assets/Imgs/Traffic_Objects/Vehicles/Trucks/truck1.png";
 
 /**
  * @description define traffic light images
- * @dependency /Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Red.png, /Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Green.png
+ * @dependency ../../Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Red.png, ../../Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Green.png
  */
 traffLightRedImg = new Image();
 traffLightRedImg.src =
-  "/Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Red.png";
+  "../../Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Red.png";
 
 traffLightGreenImg = new Image();
 traffLightGreenImg.src =
-  "/Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Green.png";
+  "../../Assets/Imgs/Traffic_Objects/Controllers/trafficLight-Green.png";
 
 /**
  * @description define obstacle image names, implementing obstacleImg.png and obstacle{1-9}.png images
- * @dependency /Assets/Imgs/Traffic_Objects/Obstacles/obstacleImg, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle1, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle2, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle3, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle4, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle5, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle6, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle7, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle8, /Assets/Imgs/Traffic_Objects/Obstacles/obstacle9
+ * @dependency ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacleImg, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle1, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle2, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle3, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle4, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle5, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle6, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle7, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle8, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle9
  */
 for (var i = 0; i < 10; i++) {
   // create image
   obstacleImgs[i] = new Image();
   //set image source
   //if first image, assign obstacleImg.png image
-  //assign the rest as /Assets/Imgs/Png/obstacle{1-9}.png images
+  //assign the rest as ../../Assets/Imgs/Png/obstacle{1-9}.png images
   obstacleImgs[i].src =
     i == 0
-      ? "/Assets/Imgs/Traffic_Objects/Obstacles/obstacleImg.png"
-      : "/Assets/Imgs/Traffic_Objects/Obstacles/obstacle" + i + ".png";
+      ? "../../Assets/Imgs/Traffic_Objects/Obstacles/obstacleImg.png"
+      : "../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle" + i + ".png";
   //set obstacleImgNames equal to source info
   obstacleImgNames[i] = obstacleImgs[i].src;
 }
@@ -422,11 +422,11 @@ roadImgs2 = [];
 for (var i = 0; i < 7; i++) {
   roadImgs1[i] = new Image();
   roadImgs1[i].src =
-    "/Assets/Imgs/Road_Segments/With_Dividers/" + (i + 1) + "-lane.png";
+    "../../Assets/Imgs/Road_Segments/With_Dividers/" + (i + 1) + "-lane.png";
 
   roadImgs2[i] = new Image();
   roadImgs2[i].src =
-    "/Assets/Imgs/Road_Segments/Without_Dividers/" + (i + 1) + "-lane.png";
+    "../../Assets/Imgs/Road_Segments/Without_Dividers/" + (i + 1) + "-lane.png";
 }
 
 /**

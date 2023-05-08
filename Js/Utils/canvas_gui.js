@@ -768,7 +768,7 @@ function activateSpeedlBox(xPixUser, yPixUser) {
 }
 
 function changeSpeedl(xPixUser, yPixUser) {
-  // free: >=130, image filename /Assets/Imgs/old/speedLimit_00.svg
+  // free: >=130, image filename ../../Assets/Imgs/old/speedLimit_00.svg
 
   void (
     debug &&

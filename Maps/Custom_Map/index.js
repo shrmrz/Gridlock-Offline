@@ -766,7 +766,7 @@ var route_w = [3];
 var route_s = [4];
 var route_n = [5];
 var route_nw = [5, 6];
-var route_eR_n = [];
+var route_eR_n = [2, 5];
 /*
 // vehicle stays on east_freeway
 var route1 = [1];
@@ -1046,6 +1046,7 @@ function updateSim() {
   north_ramp1.calcAccelerations();
   north_ramp1.updateSpeedPositions();
   north_ramp1.updateBCdown();
+  north_ramp1.updateBCup(qOn,dt,route_eR_n);
 
   //template: mergeDiverge(newRoad,offset,uStart,uEnd,isMerge,toRight)
   var u_antic = 20;
@@ -1067,9 +1068,9 @@ function updateSim() {
   );
   east_ramp1.mergeDiverge(
     north_freeway,
-    -mainRampOffset - 1000,
-    mainRampOffset + taperLen + 500,
-    mainRampOffset + divergeLen - u_antic + 400,
+    -mainRampOffset,
+    mainRampOffset + taperLen,
+    mainRampOffset + divergeLen - u_antic,
     true,
     false
   );

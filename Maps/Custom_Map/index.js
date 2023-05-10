@@ -766,6 +766,7 @@ var route_w = [3];
 var route_s = [4];
 var route_n = [5];
 var route_nw = [5, 6];
+var route_eR_n = [];
 /*
 // vehicle stays on east_freeway
 var route1 = [1];
@@ -1039,6 +1040,7 @@ function updateSim() {
   east_ramp1.calcAccelerations();
   east_ramp1.updateSpeedPositions();
   east_ramp1.updateBCdown();
+  east_ramp1.changeLanes();
 
   north_ramp1.updateLastLCtimes(dt); // needed since LC from main road!!
   north_ramp1.calcAccelerations();
@@ -1049,9 +1051,9 @@ function updateSim() {
   var u_antic = 20;
   east_freeway.mergeDiverge(
     east_ramp1,
-    -mainRampOffset,
-    mainRampOffset + taperLen,
-    mainRampOffset + divergeLen - u_antic,
+    -mainRampOffset - 50,
+    mainRampOffset + taperLen - 290,
+    mainRampOffset + divergeLen - u_antic - 200,
     false,
     true
   );
@@ -1062,6 +1064,14 @@ function updateSim() {
     mainRampOffset + divergeLen - u_antic,
     false,
     true
+  );
+  east_ramp1.mergeDiverge(
+    north_freeway,
+    -mainRampOffset - 1000,
+    mainRampOffset + taperLen + 500,
+    mainRampOffset + divergeLen - u_antic + 400,
+    true,
+    false
   );
   /**
    * UpdateSim (4):

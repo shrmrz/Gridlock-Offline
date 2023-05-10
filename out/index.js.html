@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: index.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: index.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  *
  *
  *
@@ -85,7 +113,7 @@ canvas.height = simDivWindow.clientHeight;
  * best approach to only run the console log if the debug flag is set to true
  */
 void (
-  debug &&
+  debug &amp;&amp;
   console.log(
     "Attempting to run addTouchListeners() in " + scenarioString + ".js"
   )
@@ -98,7 +126,7 @@ void (
 addTouchListeners();
 
 void (
-  debug &&
+  debug &amp;&amp;
   console.log(
     "Successfully ran addTouchListeners() in " + scenarioString + ".js"
   )
@@ -164,7 +192,7 @@ const PI = Math.PI;
   Example: refSizePhys propto sqrt(refSizePix) => roads get more compact 
   and vehicles get smaller, both on a sqrt basis
 
-  Or jump at trigger refSizePix<canvasSizeCrit propto clientSize 
+  Or jump at trigger refSizePix&lt;canvasSizeCrit propto clientSize 
   => css cntrl normal/mobile with 2 fixed settings
 
   NOTICE: canvas has strange initialization of width=300 in firefox 
@@ -357,7 +385,7 @@ setSlider(slider_fracTruck, slider_fracTruckVal, 100 * fracTruck, 0, "%");
  */
 IDM_a = 0.5; // low to allow stopGo
 
-setSlider(slider_IDM_a, slider_IDM_aVal, IDM_a, 1, "m/s<sup>2</sup>");
+setSlider(slider_IDM_a, slider_IDM_aVal, IDM_a, 1, "m/s&lt;sup>2&lt;/sup>");
 
 /**
  *
@@ -411,7 +439,7 @@ traffLightGreenImg.src =
  * @description define obstacle image names, implementing obstacleImg.png and obstacle{1-9}.png images
  * @dependency ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacleImg, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle1, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle2, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle3, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle4, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle5, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle6, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle7, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle8, ../../Assets/Imgs/Traffic_Objects/Obstacles/obstacle9
  */
-for (var i = 0; i < 10; i++) {
+for (var i = 0; i &lt; 10; i++) {
   // create image
   obstacleImgs[i] = new Image();
   //set image source
@@ -433,7 +461,7 @@ roadImgs1 = [];
 roadImgs2 = [];
 
 // add up to 7 (optional) number of lanes for each road
-for (var i = 0; i < 7; i++) {
+for (var i = 0; i &lt; 7; i++) {
   roadImgs1[i] = new Image();
   roadImgs1[i].src =
     "../../Assets/Imgs/Road_Segments/With_Dividers/" + (i + 1) + "-lane.png";
@@ -468,7 +496,7 @@ rampImg = roadImgs1[nLanes_er - 1];
  * print road names and values for debugging purposes
  */
 void (
-  debug &&
+  debug &amp;&amp;
   console.log(
     "roadImg1=",
     roadImg1,
@@ -531,7 +559,7 @@ var id_east_ramp1 = 2;
 var offrampDis;
 function east_ramp1_trajectory_x(u) {
   var xDivergeBegin = east_freeway_trajectory_x(mainRampOffset);
-  return u < divergeLen
+  return u &lt; divergeLen
     ? xDivergeBegin + u + 2 // straight length
     : xDivergeBegin -
         3 +
@@ -544,9 +572,9 @@ function east_ramp1_trajectory_y(u) {
     east_freeway_trajectory_y(mainRampOffset) -
     0.5 * laneWidth * (nLanes_ef + nLanes_er) -
     0.02 * laneWidth;
-  return u < taperLen + 30
+  return u &lt; taperLen + 30
     ? yDivergeBegin + laneWidth - ((laneWidth + 3.5) * u) / taperLen //length of tapered portion of offramp
-    : u < divergeLen
+    : u &lt; divergeLen
     ? yDivergeBegin - 10 // this is the gap between off ramp (straightaway) and the road
     : yDivergeBegin -
       10 -
@@ -660,10 +688,10 @@ function north_ramp1_trajectory_x(u) {
     0.5 * laneWidth * (nLanes_nf + nLanes_nr) -
     0.02 * laneWidth;
 
-  return u < taperLen
+  return u &lt; taperLen
     ? // tapered segment
       yDivergeBegin + laneWidth - (laneWidth * u) / taperLen + rampFreewayOffset
-    : u < divergeLen
+    : u &lt; divergeLen
     ? // straight segment
       yDivergeBegin + rampFreewayOffset
     : // roundabout segment
@@ -673,8 +701,8 @@ function north_ramp1_trajectory_x(u) {
 }
 function north_ramp1_trajectory_y(u) {
   var xDivergeBegin = north_freeway_trajectory_y(mainRampOffset);
-  return u < divergeLen
-    ? u < 70
+  return u &lt; divergeLen
+    ? u &lt; 70
       ? 70
       : xDivergeBegin + u - 10 // straight length
     : xDivergeBegin -
@@ -736,7 +764,7 @@ network[5] = north_ramp1;
 network[0] = mainroad;
 network[1] = ramp;
 */
-for (var ir = 0; ir < network.length; ir++) {
+for (var ir = 0; ir &lt; network.length; ir++) {
   network[ir].setDriverVariation(driver_varcoeff);
   network[ir].drawVehIDs = drawVehIDs;
 }
@@ -785,66 +813,66 @@ var route1 = [1];
 // vehicle takes ramp
 var route2 = [1, 2];
 */
-for (var i = 0; i < east_freeway.veh.length; i++) {
-  east_freeway.veh[i].route = Math.random() < fracOff ? route_en : route_e;
+for (var i = 0; i &lt; east_freeway.veh.length; i++) {
+  east_freeway.veh[i].route = Math.random() &lt; fracOff ? route_en : route_e;
   // output for debugging
   void (
-    debug &&
+    debug &amp;&amp;
     console.log(
       "east_freeway.veh[" + i + "].route=" + east_freeway.veh[i].route
     )
   );
 }
 
-for (var i = 0; i < west_freeway.veh.length; i++) {
+for (var i = 0; i &lt; west_freeway.veh.length; i++) {
   west_freeway.veh[i].route = route_w;
   // output for debugging
   void (
-    debug &&
+    debug &amp;&amp;
     console.log(
       "west_freeway.veh[" + i + "].route=" + west_freeway.veh[i].route
     )
   );
 }
 
-for (var i = 0; i < north_freeway.veh.length; i++) {
-  north_freeway.veh[i].route = Math.random() < fracOff ? route_nw : route_n;
+for (var i = 0; i &lt; north_freeway.veh.length; i++) {
+  north_freeway.veh[i].route = Math.random() &lt; fracOff ? route_nw : route_n;
   // output for debugging
   void (
-    debug &&
+    debug &amp;&amp;
     console.log(
       "north_freeway.veh[" + i + "].route=" + north_freeway.veh[i].route
     )
   );
 }
 
-for (var i = 0; i < south_freeway.veh.length; i++) {
+for (var i = 0; i &lt; south_freeway.veh.length; i++) {
   south_freeway.veh[i].route = route_s;
   // output for debugging
   void (
-    debug &&
+    debug &amp;&amp;
     console.log(
       "south_freeway.veh[" + i + "].route=" + south_freeway.veh[i].route
     )
   );
 }
 
-for (var i = 0; i < east_ramp1.veh.length; i++) {
+for (var i = 0; i &lt; east_ramp1.veh.length; i++) {
   east_ramp1.veh[i].route = route_eR_n;
   // output for debugging
   void (
-    debug &&
+    debug &amp;&amp;
     console.log(
       "south_freeway.veh[" + i + "].route=" + south_freeway.veh[i].route
     )
   );
 }
 
-for (var i = 0; i < north_ramp1.veh.length; i++) {
+for (var i = 0; i &lt; north_ramp1.veh.length; i++) {
   north_ramp1.veh[i].route = route_nR_W;
   // output for debugging
   void (
-    debug &&
+    debug &amp;&amp;
     console.log(
       "south_freeway.veh[" + i + "].route=" + south_freeway.veh[i].route
     )
@@ -900,21 +928,21 @@ var trafficLightControl = new TrafficLightControlEditor(trafficObjs, 0.5, 0.5);
  * @done
  */
 function updateDimensions() {
-  void (debug && console.log("Updating Dimensions..."));
+  void (debug &amp;&amp; console.log("Updating Dimensions..."));
 
   // recalculate if viewport or sizePhys changes
   center_xPhys = center_xRel * refSizePhys;
   center_yPhys = center_yRel * refSizePhys;
 
   void (
-    debug &&
-    console.log(" mainroadLen=", mainroadLen) &&
+    debug &amp;&amp;
+    console.log(" mainroadLen=", mainroadLen) &amp;&amp;
     console.log(
       "updateDimensions: mainroadLen=",
       mainroadLen,
       " isSmartphone=",
       isSmartphone
-    ) &&
+    ) &amp;&amp;
     console.log("Done Updating Dimensions")
   );
 }
@@ -924,7 +952,7 @@ function updateDimensions() {
  */
 function updateSim() {
   // (1) update times and, if canvas change,
-  // scale and, if smartphone<->no-smartphone change, physical geometry
+  // scale and, if smartphone&lt;->no-smartphone change, physical geometry
 
   time += dt; // dt depends on timewarp slider (fps=const)
   itime++;
@@ -999,7 +1027,7 @@ function updateSim() {
    * update moveable speed limits
    */
 
-  for (var i = 0; i < network.length; i++) {
+  for (var i = 0; i &lt; network.length; i++) {
     network[i].updateSpeedlimits(trafficObjs);
   }
 
@@ -1009,7 +1037,7 @@ function updateSim() {
    * just stay where they have been dropped outside of a road
    * (here more responsive than in drawSim)
    */
-  if (userCanDropObjects && !isSmartphone && !trafficObjPicked) {
+  if (userCanDropObjects &amp;&amp; !isSmartphone &amp;&amp; !trafficObjPicked) {
     trafficObjs.zoomBack();
   }
 
@@ -1018,7 +1046,7 @@ function updateSim() {
    * do central simulation update of vehicles
    */
 
-  for (var ir = 0; ir < network.length; ir++) {
+  for (var ir = 0; ir &lt; network.length; ir++) {
     network[ir].calcAccelerations();
   }
 
@@ -1032,8 +1060,8 @@ function updateSim() {
   //north_freeway.changeLanes();
   //north_freeway.updateSpeedPositions();
   //north_freeway.updateBCdown();
-  var routeN = Math.random() < fracOff ? route_nw : route_n;
-  var routeE = Math.random() < fracOff ? route_en : route_e;
+  var routeN = Math.random() &lt; fracOff ? route_nw : route_n;
+  var routeE = Math.random() &lt; fracOff ? route_en : route_e;
 
   north_freeway.updateBCup(qIn, dt, routeN); // qIn=total inflow, route opt. arg.
 
@@ -1056,7 +1084,7 @@ function updateSim() {
   //east_freeway.changeLanes();
   //east_freeway.updateSpeedPositions();
   //east_freeway.updateBCdown();
-  //var routeE = Math.random() < fracOff ? route_en : route_e;
+  //var routeE = Math.random() &lt; fracOff ? route_en : route_e;
   east_freeway.updateBCup(qIn, dt, routeE); // qIn=total inflow, route opt. arg.
   //east_freeway.writeVehicleRoutes(0.5*east_freeway.roadLen,east_freeway.roadLen);//!!!
 
@@ -1074,11 +1102,11 @@ function updateSim() {
   //north_ramp1.updateBCdown();
   //east_ramp1.changeLanes();
 
-  for (var ir = 0; ir < network.length; ir++) {
+  for (var ir = 0; ir &lt; network.length; ir++) {
     network[ir].updateBCdown();
   }
 
-  for (var ir = 0; ir < network.length; ir++) {
+  for (var ir = 0; ir &lt; network.length; ir++) {
     network[ir].changeLanes();
     network[ir].updateLastLCtimes(dt);
   }
@@ -1114,11 +1142,11 @@ function updateSim() {
   );
   east_ramp1.connect(north_ramp1, 484, 76, 0, [], 10, false);
 
-  for (var ir = 0; ir < network.length; ir++) {
+  for (var ir = 0; ir &lt; network.length; ir++) {
     network[ir].updateBCdown();
   }
 
-  for (var ir = 0; ir < network.length; ir++) {
+  for (var ir = 0; ir &lt; network.length; ir++) {
     network[ir].updateSpeedPositions();
   }
 
@@ -1244,7 +1272,7 @@ function drawSim() {
   if (drawBackground) {
     if (
       hasChanged ||
-      itime <= 10 ||
+      itime &lt;= 10 ||
       itime % 50 == 0 ||
       userCanvasManip ||
       !drawRoad ||
@@ -1288,7 +1316,7 @@ function drawSim() {
   // here only example for complete args (only in coffeemeterGame relevant
   // !!! DOS in road.draw, OK in road.drawVehicles
 
-  var changedGeometry = userCanvasManip || hasChanged || itime <= 1;
+  var changedGeometry = userCanvasManip || hasChanged || itime &lt;= 1;
 
   north_freeway.draw(roadImg1, roadImg2, scale, changedGeometry);
   south_freeway.draw(roadImg1, roadImg2, scale, changedGeometry);
@@ -1356,7 +1384,7 @@ function drawSim() {
   );
 
   // (5a) draw traffic objects
-  if (userCanDropObjects && !isSmartphone) {
+  if (userCanDropObjects &amp;&amp; !isSmartphone) {
     trafficObjs.draw(scale);
   }
 
@@ -1370,7 +1398,7 @@ function drawSim() {
   displayTime(time, textsize);
 
   // drawSim (7): show logical coordinates if activated
-  if (showCoords && mouseInside) {
+  if (showCoords &amp;&amp; mouseInside) {
     showLogicalCoords(xPixUser, yPixUser);
   }
 
@@ -1412,7 +1440,7 @@ function main_loop() {
  *
  **/
 
-void (debug && console.log("first main execution"));
+void (debug &amp;&amp; console.log("first main execution"));
 
 /**
  * initialize the model(s)
@@ -1441,3 +1469,26 @@ showInfo();
  *      (ii) when pressing the start button in *gui.js
  */
 var myRun = setInterval(main_loop, 1000 / fps);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#IDM_a">IDM_a</a></li><li><a href="global.html#PI">PI</a></li><li><a href="global.html#aspectRatio">aspectRatio</a></li><li><a href="global.html#background">background</a></li><li><a href="global.html#canvas">canvas</a></li><li><a href="global.html#carImg">carImg</a></li><li><a href="global.html#center_xPhys">center_xPhys</a></li><li><a href="global.html#crashinfo">crashinfo</a></li><li><a href="global.html#ctx">ctx</a></li><li><a href="global.html#density">density</a></li><li><a href="global.html#drawSim">drawSim</a></li><li><a href="global.html#driver_varcoeff">driver_varcoeff</a></li><li><a href="global.html#dt">dt</a></li><li><a href="global.html#fracOff">fracOff</a></li><li><a href="global.html#fracTruck">fracTruck</a></li><li><a href="global.html#id_east_freeway">id_east_freeway</a></li><li><a href="global.html#id_east_ramp1">id_east_ramp1</a></li><li><a href="global.html#id_north_freeway">id_north_freeway</a></li><li><a href="global.html#id_north_ramp1">id_north_ramp1</a></li><li><a href="global.html#id_south_freeway">id_south_freeway</a></li><li><a href="global.html#id_west_freeway">id_west_freeway</a></li><li><a href="global.html#isSmartphone">isSmartphone</a></li><li><a href="global.html#main_loop">main_loop</a></li><li><a href="global.html#myRun">myRun</a></li><li><a href="global.html#nLanes_ef">nLanes_ef</a></li><li><a href="global.html#qIn">qIn</a></li><li><a href="global.html#rampImg">rampImg</a></li><li><a href="global.html#refSizePhys">refSizePhys</a></li><li><a href="global.html#refSizePix">refSizePix</a></li><li><a href="global.html#roadImg1">roadImg1</a></li><li><a href="global.html#roadImg2">roadImg2</a></li><li><a href="global.html#route_e">route_e</a></li><li><a href="global.html#scale">scale</a></li><li><a href="global.html#simDivWindow">simDivWindow</a></li><li><a href="global.html#speedInit">speedInit</a></li><li><a href="global.html#traffLightRedImg">traffLightRedImg</a></li><li><a href="global.html#trafficLightControl">trafficLightControl</a></li><li><a href="global.html#trafficObjs">trafficObjs</a></li><li><a href="global.html#updateDimensions">updateDimensions</a></li><li><a href="global.html#updateSim">updateSim</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue May 09 2023 23:47:01 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

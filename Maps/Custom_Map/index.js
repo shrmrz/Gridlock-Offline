@@ -311,7 +311,7 @@ var duTactical = 310;
 
 /**********************************************************
  * @name Offramp_Flow_Slider
- * @description
+ * @description tbd
  */
 
 /**
@@ -323,7 +323,7 @@ setSlider(slider_fracOff, slider_fracOffVal, 100 * fracOff /* 25% */, 0, "%");
 
 /**********************************************************
  * @name Inflow_Slider
- * @description
+ * @description tbd
  */
 
 /**
@@ -337,7 +337,7 @@ setSlider(slider_qIn, slider_qInVal, 3600 * qIn, commaDigits, "veh/h");
 
 /**********************************************************
  * @name Truck_Perc_Slider
- * @description
+ * @description tbd
  */
 
 /**
@@ -349,7 +349,7 @@ setSlider(slider_fracTruck, slider_fracTruckVal, 100 * fracTruck, 0, "%");
 
 /**********************************************************
  * @name Max_Accel_A_Slider
- * @description
+ * @description tbd
  */
 
 /**
@@ -899,7 +899,7 @@ var trafficLightControl = new TrafficLightControlEditor(trafficObjs, 0.5, 0.5);
  **/
 
 /**
- * @description
+ * @description update certain variables related to the dimensions of the viewport or physical size
  * @done
  */
 function updateDimensions() {
@@ -922,7 +922,7 @@ function updateDimensions() {
   );
 }
 /**
- * @description
+ * @description updates the simulation of a traffic network by performing several tasks
  * @done
  */
 function updateSim() {
@@ -1020,7 +1020,7 @@ function updateSim() {
    * updateSim (3):
    * do central simulation update of vehicles
    */
-  
+
   for (var ir = 0; ir < network.length; ir++) {
     network[ir].calcAccelerations();
   }
@@ -1030,7 +1030,11 @@ function updateSim() {
    * do central simulation update of vehicles
    */
 
-  
+  //north_freeway.updateLastLCtimes(dt);
+  //north_freeway.calcAccelerations();
+  //north_freeway.changeLanes();
+  //north_freeway.updateSpeedPositions();
+  //north_freeway.updateBCdown();
   var routeN = Math.random() < fracOff ? route_nw : route_n;
   var routeE = Math.random() < fracOff ? route_en : route_e;
 
@@ -1043,20 +1047,28 @@ function updateSim() {
   //var routeE = Math.random() < fracOff ? route_en : route_e;
   east_freeway.updateBCup(qIn, dt, routeE); // qIn=total inflow, route opt. arg.
 
-  east_ramp1.updateBCup(0,dt,route_eR_n);
+  //east_ramp1.updateLastLCtimes(dt); // needed since LC from main road!!
+  //east_ramp1.calcAccelerations();
+  //east_ramp1.updateSpeedPositions();
+  east_ramp1.updateBCup(qIn, dt, route_eR_n);
+  //east_ramp1.updateBCdown();
+  //east_ramp1.changeLanes();
 
-  north_ramp1.updateBCup(0,dt,route_nR_W);
+  //north_ramp1.updateLastLCtimes(dt); // needed since LC from main road!!
+  //north_ramp1.calcAccelerations();
+  //north_ramp1.updateSpeedPositions();
+  north_ramp1.updateBCup(qIn, dt, route_nR_W);
+  //north_ramp1.updateBCdown();
+  //east_ramp1.changeLanes();
 
- 
-  for(var ir=0; ir<network.length; ir++){
+  for (var ir = 0; ir < network.length; ir++) {
     network[ir].updateBCdown();
   }
 
-  for(var ir=0; ir<network.length; ir++){
-    network[ir].changeLanes();         
+  for (var ir = 0; ir < network.length; ir++) {
+    network[ir].changeLanes();
     network[ir].updateLastLCtimes(dt);
   }
-
 
   //template: mergeDiverge(newRoad,offset,uStart,uEnd,isMerge,toRight)
   var u_antic = 20;
@@ -1069,6 +1081,16 @@ function updateSim() {
     true
   );
 
+  // east_freeway.connect(
+  //   east_ramp1,
+  //   3,
+  //   0,
+  //   0,
+  //   50,
+  //   true
+  // )
+
+  north_ramp1.connect(west_freeway, 453, 117, 3, [], 10, false);
   north_freeway.mergeDiverge(
     north_ramp1, // newRoad
     -mainRampOffset, // offset
@@ -1077,30 +1099,13 @@ function updateSim() {
     false,
     true
   );
-  east_ramp1.connect(
-    north_ramp1,
-     484,
-     73,
-     0,
-     [],
-     10,
-     false
-  );
-  north_ramp1.connect(
-    west_freeway,
-    472,
-    129,
-    3,
-    [],
-    10,
-    false
-  )
-  
-  for(var ir=0; ir<network.length; ir++){
+  east_ramp1.connect(north_ramp1, 484, 76, 0, [], 10, false);
+
+  for (var ir = 0; ir < network.length; ir++) {
     network[ir].updateBCdown();
   }
 
-  for(var ir=0; ir<network.length; ir++){
+  for (var ir = 0; ir < network.length; ir++) {
     network[ir].updateSpeedPositions();
   }
 
@@ -1164,7 +1169,7 @@ function updateSim() {
 } // end of updateSim function
 
 /**
- * @description
+ * @description redefines graphical aspects of a road, based on the responsive design if the canvas has been resized
  * @done
  */
 function drawSim() {

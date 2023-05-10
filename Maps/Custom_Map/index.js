@@ -896,7 +896,7 @@ var trafficLightControl = new TrafficLightControlEditor(trafficObjs, 0.5, 0.5);
  **/
 
 /**
- * @description tbd
+ * @description update certain variables related to the dimensions of the viewport or physical size
  * @done
  */
 function updateDimensions() {
@@ -919,7 +919,7 @@ function updateDimensions() {
   );
 }
 /**
- * @description tbd
+ * @description updates the simulation of a traffic network by performing several tasks
  * @done
  */
 function updateSim() {
@@ -1182,7 +1182,7 @@ function updateSim() {
 } // end of updateSim function
 
 /**
- * @description tbd
+ * @description redefines graphical aspects of a road, based on the responsive design if the canvas has been resized
  * @done
  */
 function drawSim() {

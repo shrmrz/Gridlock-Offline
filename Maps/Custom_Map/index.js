@@ -311,7 +311,7 @@ var duTactical = 310;
 
 /**********************************************************
  * @name Offramp_Flow_Slider
- * @description tbd
+ * @description to set up a slider input element for controlling offramp flow
  */
 
 /**
@@ -323,7 +323,7 @@ setSlider(slider_fracOff, slider_fracOffVal, 100 * fracOff /* 25% */, 0, "%");
 
 /**********************************************************
  * @name Inflow_Slider
- * @description tbd
+ * @description to set up a slider input element for controlling onramp flow
  */
 
 /**
@@ -337,7 +337,7 @@ setSlider(slider_qIn, slider_qInVal, 3600 * qIn, commaDigits, "veh/h");
 
 /**********************************************************
  * @name Truck_Perc_Slider
- * @description tbd
+ * @description a slider  that controls the value of fracTruck
  */
 
 /**
@@ -349,7 +349,7 @@ setSlider(slider_fracTruck, slider_fracTruckVal, 100 * fracTruck, 0, "%");
 
 /**********************************************************
  * @name Max_Accel_A_Slider
- * @description tbd
+ * @description slider for the max acceleration
  */
 
 /**
@@ -919,6 +919,7 @@ function updateDimensions() {
   );
 }
 /**
+ * @name updatesim
  * @description updates the simulation of a traffic network by performing several tasks
  * @done
  */

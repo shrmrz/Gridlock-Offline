@@ -541,18 +541,19 @@ function east_ramp1_trajectory_y(u) {
     east_freeway_trajectory_y(mainRampOffset) -
     0.5 * laneWidth * (nLanes_ef + nLanes_er) -
     0.02 * laneWidth;
-  return u < taperLen
-    ? yDivergeBegin - 10 + laneWidth - (laneWidth * u) / taperLen
+  return u < taperLen + 30
+    ? yDivergeBegin + laneWidth - ((laneWidth + 3.5) * u) / taperLen //length of tapered portion of offramp
     : u < divergeLen
-    ? yDivergeBegin - 10
+    ? yDivergeBegin - 10 // this is the gap between off ramp (straightaway) and the road
     : yDivergeBegin -
       10 -
-      offRadius * (1 - Math.cos((u - divergeLen) / offRadius));
+      offRadius * (1 - Math.cos((u - divergeLen) / offRadius)); // this is the roundabout style portion of the offramp
 }
 var east_ramp1_trajectory = [east_ramp1_trajectory_x, east_ramp1_trajectory_y];
+
 var east_ramp1 = new road(
   id_east_ramp1,
-  offLen + 20,
+  offLen,
   laneWidth,
   nLanes_er,
   east_ramp1_trajectory,
@@ -649,7 +650,6 @@ network[4] = north_freeway;
  */
 var id_north_ramp1 = 6;
 function north_ramp1_trajectory_x(u) {
-  // physical coordinates
   var yDivergeBegin =
     north_freeway_trajectory_x(mainRampOffset) -
     0.5 * laneWidth * (nLanes_nf + nLanes_nr) -
@@ -663,7 +663,6 @@ function north_ramp1_trajectory_x(u) {
       25;
 }
 function north_ramp1_trajectory_y(u) {
-  // physical coordinates
   var xDivergeBegin = north_freeway_trajectory_y(mainRampOffset);
   return u < divergeLen
     ? xDivergeBegin + u - 20
@@ -1048,10 +1047,10 @@ function updateSim() {
   //template: mergeDiverge(newRoad,offset,uStart,uEnd,isMerge,toRight)
   var u_antic = 20;
   east_freeway.mergeDiverge(
-    east_ramp1,
-    -mainRampOffset,
-    mainRampOffset + taperLen,
-    mainRampOffset + divergeLen - u_antic,
+    east_ramp1, // newRoad
+    -mainRampOffset, // offset
+    mainRampOffset + taperLen, // uStart
+    mainRampOffset + taperLen + 3, // uEnd
     false,
     true
   );

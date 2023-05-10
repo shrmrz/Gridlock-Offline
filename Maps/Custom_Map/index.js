@@ -329,7 +329,8 @@ setSlider(slider_fracOff, slider_fracOffVal, 100 * fracOff /* 25% */, 0, "%");
 /**
  * @initial 4000 / 3600 = 1.11
  */
-qIn = 4600 / 3600;
+//qIn = 4600 / 3600;
+qIn = 0.2;
 commaDigits = 0;
 
 setSlider(slider_qIn, slider_qInVal, 3600 * qIn, commaDigits, "veh/h");
@@ -354,7 +355,7 @@ setSlider(slider_fracTruck, slider_fracTruckVal, 100 * fracTruck, 0, "%");
 /**
  * @initial 70%
  */
-IDM_a = 0.7; // low to allow stopGo
+IDM_a = 0.5; // low to allow stopGo
 
 setSlider(slider_IDM_a, slider_IDM_aVal, IDM_a, 1, "m/s<sup>2</sup>");
 
@@ -527,12 +528,14 @@ network[0] = east_freeway;
  * east offramp
  */
 var id_east_ramp1 = 2;
+var offrampDis;
 function east_ramp1_trajectory_x(u) {
   var xDivergeBegin = east_freeway_trajectory_x(mainRampOffset);
   return u < divergeLen
-    ? xDivergeBegin + u
+    ? xDivergeBegin + u + 2 // straight length
     : xDivergeBegin -
-        5 +
+        3 +
+        2 +
         divergeLen +
         offRadius * Math.sin((u - divergeLen) / offRadius);
 }
@@ -541,18 +544,19 @@ function east_ramp1_trajectory_y(u) {
     east_freeway_trajectory_y(mainRampOffset) -
     0.5 * laneWidth * (nLanes_ef + nLanes_er) -
     0.02 * laneWidth;
-  return u < taperLen
-    ? yDivergeBegin - 10 + laneWidth - (laneWidth * u) / taperLen
+  return u < taperLen + 30
+    ? yDivergeBegin + laneWidth - ((laneWidth + 3.5) * u) / taperLen //length of tapered portion of offramp
     : u < divergeLen
-    ? yDivergeBegin - 10
+    ? yDivergeBegin - 10 // this is the gap between off ramp (straightaway) and the road
     : yDivergeBegin -
       10 -
-      offRadius * (1 - Math.cos((u - divergeLen) / offRadius));
+      offRadius * (1 - Math.cos((u - divergeLen) / offRadius)); // this is the roundabout style portion of the offramp
 }
 var east_ramp1_trajectory = [east_ramp1_trajectory_x, east_ramp1_trajectory_y];
+
 var east_ramp1 = new road(
   id_east_ramp1,
-  offLen + 20,
+  offLen + 10,
   laneWidth,
   nLanes_er,
   east_ramp1_trajectory,
@@ -649,26 +653,32 @@ network[4] = north_freeway;
  */
 var id_north_ramp1 = 6;
 function north_ramp1_trajectory_x(u) {
-  // physical coordinates
+  var rampFreewayOffset = laneWidth * (nLanes_nf + 1);
+
   var yDivergeBegin =
     north_freeway_trajectory_x(mainRampOffset) -
     0.5 * laneWidth * (nLanes_nf + nLanes_nr) -
     0.02 * laneWidth;
+
   return u < taperLen
-    ? yDivergeBegin + laneWidth - (laneWidth * u) / taperLen + 25
+    ? // tapered segment
+      yDivergeBegin + laneWidth - (laneWidth * u) / taperLen + rampFreewayOffset
     : u < divergeLen
-    ? yDivergeBegin + 25
-    : yDivergeBegin +
+    ? // straight segment
+      yDivergeBegin + rampFreewayOffset
+    : // roundabout segment
+      yDivergeBegin +
       offRadius * (1 - Math.cos((u - divergeLen) / offRadius)) +
-      25;
+      rampFreewayOffset;
 }
 function north_ramp1_trajectory_y(u) {
-  // physical coordinates
   var xDivergeBegin = north_freeway_trajectory_y(mainRampOffset);
   return u < divergeLen
-    ? xDivergeBegin + u - 20
+    ? u < 70
+      ? 70
+      : xDivergeBegin + u - 10 // straight length
     : xDivergeBegin -
-        20 +
+        10 +
         divergeLen +
         offRadius * Math.sin((u - divergeLen) / offRadius);
 }
@@ -766,6 +776,8 @@ var route_w = [3];
 var route_s = [4];
 var route_n = [5];
 var route_nw = [5, 6];
+var route_eR_n = [2, 6];
+var route_nR_W = [6, 3];
 /*
 // vehicle stays on east_freeway
 var route1 = [1];
@@ -808,6 +820,28 @@ for (var i = 0; i < north_freeway.veh.length; i++) {
 
 for (var i = 0; i < south_freeway.veh.length; i++) {
   south_freeway.veh[i].route = route_s;
+  // output for debugging
+  void (
+    debug &&
+    console.log(
+      "south_freeway.veh[" + i + "].route=" + south_freeway.veh[i].route
+    )
+  );
+}
+
+for (var i = 0; i < east_ramp1.veh.length; i++) {
+  east_ramp1.veh[i].route = route_eR_n;
+  // output for debugging
+  void (
+    debug &&
+    console.log(
+      "south_freeway.veh[" + i + "].route=" + south_freeway.veh[i].route
+    )
+  );
+}
+
+for (var i = 0; i < north_ramp1.veh.length; i++) {
+  north_ramp1.veh[i].route = route_nR_W;
   // output for debugging
   void (
     debug &&
@@ -983,86 +1017,137 @@ function updateSim() {
    * updateSim (3):
    * do central simulation update of vehicles
    */
-  /*
-  mainroad.updateLastLCtimes(dt);
-  mainroad.calcAccelerations();
-  mainroad.changeLanes();
-  mainroad.updateSpeedPositions();
-  mainroad.updateBCdown();
-  var route = Math.random() < fracOff ? route_en : route_e;
-  mainroad.updateBCup(qIn, dt, route); // qIn=total inflow, route opt. arg.
-  //mainroad.writeVehicleRoutes(0.5*mainroad.roadLen,mainroad.roadLen);//!!!
-
-  ramp.updateLastLCtimes(dt); // needed since LC from main road!!
-  ramp.calcAccelerations();
-  ramp.updateSpeedPositions();
-  ramp.updateBCdown();
-*/
+  
+  for (var ir = 0; ir < network.length; ir++) {
+    network[ir].calcAccelerations();
+  }
 
   /**
    * updateSim (3):
    * do central simulation update of vehicles
    */
 
-  north_freeway.updateLastLCtimes(dt);
-  north_freeway.calcAccelerations();
-  north_freeway.changeLanes();
-  north_freeway.updateSpeedPositions();
-  north_freeway.updateBCdown();
+  //north_freeway.updateLastLCtimes(dt);
+  //north_freeway.calcAccelerations();
+  //north_freeway.changeLanes();
+  //north_freeway.updateSpeedPositions();
+  //north_freeway.updateBCdown();
   var routeN = Math.random() < fracOff ? route_nw : route_n;
+  var routeE = Math.random() < fracOff ? route_en : route_e;
+
   north_freeway.updateBCup(qIn, dt, routeN); // qIn=total inflow, route opt. arg.
 
-  south_freeway.updateLastLCtimes(dt);
-  south_freeway.calcAccelerations();
-  south_freeway.changeLanes();
-  south_freeway.updateSpeedPositions();
-  south_freeway.updateBCdown();
-  south_freeway.updateBCup(qIn, dt, route_s); // qIn=total inflow, route opt. arg.
+  //south_freeway.updateLastLCtimes(dt);
+  //south_freeway.calcAccelerations();
+  //south_freeway.changeLanes();
+  //south_freeway.updateSpeedPositions();
+  //south_freeway.updateBCdown();
+  //south_freeway.updateBCup(qIn, dt, route_s); // qIn=total inflow, route opt. arg.
 
-  west_freeway.updateLastLCtimes(dt);
-  west_freeway.calcAccelerations();
-  west_freeway.changeLanes();
-  west_freeway.updateSpeedPositions();
-  west_freeway.updateBCdown();
+  //west_freeway.updateLastLCtimes(dt);
+  //west_freeway.calcAccelerations();
+  //west_freeway.changeLanes();
+  //west_freeway.updateSpeedPositions();
+  //west_freeway.updateBCdown();
   west_freeway.updateBCup(qIn, dt, route_w); // qIn=total inflow, route opt. arg.
 
-  east_freeway.updateLastLCtimes(dt);
-  east_freeway.calcAccelerations();
-  east_freeway.changeLanes();
-  east_freeway.updateSpeedPositions();
-  east_freeway.updateBCdown();
-  var routeE = Math.random() < fracOff ? route_en : route_e;
+  //east_freeway.updateLastLCtimes(dt);
+  //east_freeway.calcAccelerations();
+  //east_freeway.changeLanes();
+  //east_freeway.updateSpeedPositions();
+  //east_freeway.updateBCdown();
+  //var routeE = Math.random() < fracOff ? route_en : route_e;
   east_freeway.updateBCup(qIn, dt, routeE); // qIn=total inflow, route opt. arg.
   //east_freeway.writeVehicleRoutes(0.5*east_freeway.roadLen,east_freeway.roadLen);//!!!
 
-  east_ramp1.updateLastLCtimes(dt); // needed since LC from main road!!
-  east_ramp1.calcAccelerations();
-  east_ramp1.updateSpeedPositions();
-  east_ramp1.updateBCdown();
+  //east_ramp1.updateLastLCtimes(dt); // needed since LC from main road!!
+  //east_ramp1.calcAccelerations();
+  //east_ramp1.updateSpeedPositions();
+  east_ramp1.updateBCup(qIn,dt,route_eR_n);
+  //east_ramp1.updateBCdown();
+  //east_ramp1.changeLanes();
 
-  north_ramp1.updateLastLCtimes(dt); // needed since LC from main road!!
-  north_ramp1.calcAccelerations();
-  north_ramp1.updateSpeedPositions();
-  north_ramp1.updateBCdown();
+  //north_ramp1.updateLastLCtimes(dt); // needed since LC from main road!!
+  //north_ramp1.calcAccelerations();
+  //north_ramp1.updateSpeedPositions();
+  north_ramp1.updateBCup(qIn,dt,route_nR_W);
+  //north_ramp1.updateBCdown();
+  //east_ramp1.changeLanes();
+ 
+  for(var ir=0; ir<network.length; ir++){
+    network[ir].updateBCdown();
+  }
+
+  for(var ir=0; ir<network.length; ir++){
+    network[ir].changeLanes();         
+    network[ir].updateLastLCtimes(dt);
+  }
+
 
   //template: mergeDiverge(newRoad,offset,uStart,uEnd,isMerge,toRight)
   var u_antic = 20;
   east_freeway.mergeDiverge(
-    east_ramp1,
-    -mainRampOffset,
-    mainRampOffset + taperLen,
-    mainRampOffset + divergeLen - u_antic,
+    east_ramp1, // newRoad
+    -mainRampOffset, // offset
+    0, //mainRampOffset + taperLen - 20, // uStart
+    29, //mainRampOffset + taperLen, // uEnd
     false,
     true
   );
+  
+  // east_freeway.connect(
+  //   east_ramp1,
+  //   3,
+  //   0,
+  //   0,
+  //   50,
+  //   true
+  // )
+
+  north_ramp1.connect(
+    west_freeway,
+    453,
+    117,
+    3,
+    [],
+    10,
+    false
+  )
   north_freeway.mergeDiverge(
-    north_ramp1,
-    -mainRampOffset,
-    mainRampOffset + taperLen,
-    mainRampOffset + divergeLen - u_antic,
+    north_ramp1, // newRoad
+    -mainRampOffset, // offset
+    110, //mainRampOffset + taperLen, // uStart
+    260, //mainRampOffset + divergeLen - u_antic, // uEnd
     false,
     true
   );
+  east_ramp1.connect(
+    north_ramp1,
+     484,
+     76,
+     0,
+     [],
+     10,
+     false
+  );
+  
+  for(var ir=0; ir<network.length; ir++){
+    network[ir].updateBCdown();
+  }
+
+  for(var ir=0; ir<network.length; ir++){
+    network[ir].updateSpeedPositions();
+  }
+
+  // east_ramp1.mergeDiverge(
+  //   north_freeway,
+  //   -mainRampOffset,
+  //   mainRampOffset + taperLen,
+  //   mainRampOffset + divergeLen - u_antic,
+  //   true,
+  //   false
+  // );
+
   /**
    * UpdateSim (4):
    * update detector readings

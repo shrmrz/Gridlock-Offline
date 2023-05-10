@@ -2,8 +2,8 @@
 
 Traffic Simulation (designed to run offline)
 
-/********************************************\*\*********************************************\*********************************************\*\*********************************************/
-/********************************************\*\*********************************************\*********************************************\*\*********************************************/
+/********************\*\*\*\*********************\*\*********************\*\*\*\*********************\*********************\*\*\*\*********************\*\*********************\*\*\*\*********************/
+/********************\*\*\*\*********************\*\*********************\*\*\*\*********************\*********************\*\*\*\*********************\*\*********************\*\*\*\*********************/
 
 # traffic-simulation.de
 
@@ -22,7 +22,7 @@ The master html file, for example onramp.html, starts the actual simulation by t
 What to do with this canvas is specified in the `init()` procedure of onramp.js which starts the simulation and is assocoated with this canvas by the first command of the init procedure,
 
 ```
- canvas = document.getElementById("canvas_onramp");
+canvas = document.getElementById("canvas_onramp");
 ```
 
 (for _ring.html_, the `init` procedure of _ring.js_ would be associated with the canvas of that file, and so on). At the end of the initialization, `init()` starts the actual simulation thread by the command

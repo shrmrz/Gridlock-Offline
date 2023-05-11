@@ -7,7 +7,13 @@
 .mainMenu nav {
   z-index: 100;
 }
+header {
+  background: black;
+}
 
+body {
+  background: var(--color-primary);
+}
 .mainMenu .bar {
   width: 30px;
   height: 5px;

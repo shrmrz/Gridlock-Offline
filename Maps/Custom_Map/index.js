@@ -181,9 +181,6 @@ const PI = Math.PI;
  * @description defines the refernce size of the canvas in pixels
  *
  * all objects scale with refSizePix (also adapts in updateDimensions)
- *
- * css/styleTrafficSimulationDe.css:
- *    canvas width:  112vmin; height: 100vmin;
  */
 var refSizePix = Math.min(canvas.height, canvas.width / critAspectRatio);
 
@@ -572,7 +569,7 @@ network[1] = east_ramp1;
  */
 var id_west_freeway = 3;
 function west_freeway_trajectory_x(u) {
-  return -u + 400;
+  return -u + 550;
 }
 function west_freeway_trajectory_y(u) {
   return -110;
@@ -1090,7 +1087,7 @@ function updateSim() {
   //   true
   // )
 
-  north_ramp1.connect(west_freeway, 453, 117, 3, [], 10, false);
+  north_ramp1.connect(west_freeway, 460, 268, 3, [], 10, false);
   north_freeway.mergeDiverge(
     north_ramp1, // newRoad
     -mainRampOffset, // offset

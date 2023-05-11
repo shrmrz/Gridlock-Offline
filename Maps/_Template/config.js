@@ -121,7 +121,7 @@ var fps = 30;
  * must be the same as in css:
  *      max-aspect-ratio: 24/19 etc.
  */
-var critAspectRatio = 120 / 95;
+var critAspectRatio = 24 / 19;
 
 /** ****************************************************************
  * @description specification of road and vehicle sizes

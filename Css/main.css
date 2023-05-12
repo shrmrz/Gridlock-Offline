@@ -6,29 +6,6 @@
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-html,
-body {
-  position: relative;
-  font: var(--font);
-  font-family: var(--font-family);
-  color: var(--color-white);
-  background: var(--color-primary);
-}
-
-a {
-  text-decoration: none;
-  color: var(--color-white);
-}
-
-/* suppresses borders on images used as links */
-img {
-  border-width: 0;
-}
-
 /*******************************************************************************************/
 /* gloabl class specific stylings */
 /*******************************************************************************************/
@@ -48,22 +25,54 @@ img {
 .hidden {
   opacity: 0;
 }
+
 .center {
   justify-content: center;
   align-items: center;
+}
+
+.disabledBtn {
+  opacity: 30%;
 }
 
 /*******************************************************************************************/
 /* global page stylings */
 /*******************************************************************************************/
 
-header {
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
   background: var(--color-black);
+}
+
+/* suppresses borders on images used as links */
+img {
+  border-width: 0;
 }
 
 /*******************************************************************************************/
 /* global font size styling */
 /*******************************************************************************************/
+body {
+  font: var(--font);
+  font-family: var(--font-family);
+  color: var(--color-white);
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-white);
+}
+
+p {
+  font-family: var(--font-family);
+  font-size: var(--fs-p);
+}
 
 h1 {
   font-family: var(--font-family);
@@ -96,9 +105,4 @@ h5 {
 h6 {
   font-family: var(--font-family);
   font-size: var(--fs-h6);
-}
-
-p {
-  font-family: var(--font-family);
-  font-size: var(--fs-p);
 }

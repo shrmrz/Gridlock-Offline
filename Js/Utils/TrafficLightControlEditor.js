@@ -287,7 +287,7 @@ TrafficLightControlEditor.prototype.showEditPanel = function () {
   var h = rightLower[1] - leftUpper[1];
   ctx.fillStyle = colBg;
   ctx.fillRect(leftUpper[0], leftUpper[1], w, h);
-  if (false) {
+  if (debug) {
     console.log(
       "canvas.width=",
       canvas.width,

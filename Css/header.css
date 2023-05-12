@@ -1,0 +1,151 @@
+/*******************************************************************************************/
+/* Header */
+/*******************************************************************************************/
+
+header {
+  background: var(--color-black);
+  z-index: 900;
+}
+
+header {
+  width: 100%;
+  max-height: 100px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header {
+  max-height: 10vh;
+  position: fixed;
+}
+
+header h1 {
+  padding: 0 1rem;
+}
+
+#bannerLogo {
+  padding: 1rem 0;
+  width: 50px;
+  max-height: 50px;
+  max-width: 300px;
+  margin: 0 25%;
+}
+
+#logoBanner {
+  padding: 1rem 0;
+  max-width: 300px;
+  max-height: 40px;
+  margin: 0 3% 0 5%;
+}
+#MapIcon {
+  width: auto;
+  height: 35px;
+  padding: 0 1rem;
+}
+
+/* if the screen is smaller than 700 px */
+@media (max-width: 700px) {
+  #logoBanner {
+    display: none;
+  }
+
+  #MapTitle {
+    display: none;
+  }
+}
+
+/* if the screen is larger than 700 px */
+@media (min-width: 700px) {
+  #bannerLogo {
+    display: none;
+  }
+
+  #MapIcon {
+    display: none;
+  }
+}
+
+/*******************************************************************************************/
+/* Main Menu Styling */
+/*******************************************************************************************/
+.mainMenu {
+  padding: 1rem;
+}
+
+.mainMenu nav {
+  z-index: 901;
+}
+
+.mainMenu .bar {
+  width: 30px;
+  height: 5px;
+  background: var(--color-white);
+  margin: 0 5px;
+  z-index: 901;
+  transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.mainMenu .bar2 {
+  margin: 5px;
+}
+
+.mainMenu input {
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  cursor: pointer;
+  top: 1rem;
+  left: 1rem;
+  opacity: 0;
+  z-index: 902;
+}
+
+.mainMenu input:checked ~ .bar1 {
+  transform: rotate(45deg) translate(5px, 10px);
+}
+
+.mainMenu input:checked ~ .bar2 {
+  opacity: 0;
+}
+
+.mainMenu input:checked ~ .bar3 {
+  transform: rotate(-45deg) translate(4px, -9px);
+}
+
+.mainMenu input:checked ~ .mainMenuOptions {
+  transform: none;
+}
+
+.mainMenuOptions {
+  position: absolute;
+  width: 250px;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  margin-top: 9vh;
+  z-index: 900;
+  background: var(--color-black);
+  list-style-type: none;
+  transform: translate(-100%, 0);
+  transition: 1s cubic-bezier(0.75, 0.2, 0.05, 1);
+}
+
+.mainMenuOptions li {
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.mainMenuOptions li:hover {
+  background: var(--color-white);
+}
+
+.mainMenuOptions a li:hover {
+  color: var(--color-black);
+  font-size: var(--fs-500);
+  font-weight: 900;
+}
+
+.mainMenuOptions li a {
+  color: var(--color-white);
+  font-size: var(--fs-500);
+}
